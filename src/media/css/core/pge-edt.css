@@ -1,0 +1,48 @@
+#pge-edt #edt-tbr
+{
+    border : 3px solid #CCC;
+    background-color : #008000;
+    width : 10em;
+    margin : 0em;
+    padding : 0em;
+    font-family : sans-serif;
+    min-height : 15em;
+}
+
+#pge-edt #edt-tbr
+{
+    -moz-border-radius : 6px;
+    -webkit-border-radius : 6px;
+    -ms-border-radius : 6px; 
+}
+
+#pge-edt #edt-tbr h1
+{
+    border : 1px solid #CCC;
+    background-color : orange;
+    margin : 0em;
+    padding : .3em 1.5em .3em 10px;
+    font-size : 1.5em;
+    cursor : move;
+}
+
+#pge-edt #edt-tbr ul
+{
+    color : #FFF;
+    margin : 0em;
+    padding : 0em;
+}
+
+#pge-edt #edt-tbr li
+{
+    margin : 0px;
+    background-color : #1F9F1F;
+    padding : .3em 1.5em .3em 10px;
+    cursor : pointer;
+}
+
+#pge-edt #edt-tbr li:hover
+{
+    background-color : #CCC;
+}
+
