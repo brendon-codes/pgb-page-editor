@@ -11,7 +11,7 @@ PGB.doc        = null;
  * @return {Int}
  */
 PGB.init = function() {
-    var context, i;
+    var context, i, p;
     PGB.doc = $(document);
     context = $(document.body);
     i = 0;
@@ -33,13 +33,33 @@ PGB.init = function() {
  * @return {String}
  */
 PGB.utl.a = function(str, args) {
-  var key, val, out;
+  var arg, key, val, out;
   out = str;
   for(arg in args) {
     key = new RegExp("\{" + arg + "\}", "ig");
     out = out.replace(key, args[arg]);
   }
   return out;
+};
+
+/**
+ * Determines if child is in parent chain
+ * 
+ * @param {Object[jQueryElement]} child
+ * @param {Object[jQueryElement]} parent
+ * @return {Bool}
+ */
+PGB.utl.parent = function(child, parent) {
+  var c, p;
+  c = child[0];
+  p = parent[0];
+  while (c !== undefined && c !== null) {
+      if (c === p) {
+          return true;
+      }
+      c = c.parentNode;
+  }
+  return false;
 };
 
 /**

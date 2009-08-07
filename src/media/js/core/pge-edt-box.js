@@ -6,6 +6,7 @@
  */
 PGB.plg.Edt.cmp.Box = function() {
     this.name = 'Box';
+    this.id = 'box';
     return;
 };
 
@@ -17,11 +18,9 @@ PGB.plg.Edt.cmp.Box = function() {
  * @param {Object[Event]} e
  * @return {Bool}
  */
-PGB.plg.Edt.cmp.Box.prototype.sel = function(e) {
+PGB.plg.Edt.cmp.Box.prototype.sel = function() {
     var doc, _this;
     _this = this;
-    e.preventDefault();
-    e.stopPropagation();
     this._actHandler = function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -53,8 +52,11 @@ PGB.plg.Edt.cmp.Box.prototype.desel = function(){
  * @return {Bool}
  */
 PGB.plg.Edt.cmp.Box.prototype.act = function(e) {
-    var boxElm;
-    this.desel();
+    var boxElm, selectBtn;
+    selectBtn = this.btnInstance.tbrInstance.findButton('select');
+    if (selectBtn !== undefined) {
+        selectBtn.sel();
+    }
     boxElm = new PGB.plg.Edt.elmP.Box(this, e);
     PGB.plg.Edt.registerElm(boxElm);
     boxElm.sel();

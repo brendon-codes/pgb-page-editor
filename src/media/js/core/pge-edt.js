@@ -33,33 +33,12 @@ PGB.plg.Edt.deselectElms = function(e) {
     e.stopPropagation();
     for (i = 0, _i = PGB.plg.Edt.elms.length; i < _i; i++) {
         if ($.isFunction(PGB.plg.Edt.elms[i].desel)) {
-            //console.log(t[0], PGB.plg.Edt.elms[i].elem);
             if (!PGB.utl.parent(t, PGB.plg.Edt.elms[i].elem)) {
                 PGB.plg.Edt.elms[i].desel();
             }
         }
     }
     return true;
-};
-
-/**
- * Determines if child is in parent chain
- * 
- * @param {Object[jQueryElement]} child
- * @param {Object[jQueryElement]} parent
- * @return {Bool}
- */
-PGB.utl.parent = function(child, parent) {
-  var c, p;
-  c = child[0];
-  p = parent[0];
-  while (c !== undefined && c !== null) {
-      if (c === p) {
-          return true;
-      }
-      c = c.parentNode;
-  }
-  return false;
 };
 
 /**
@@ -80,25 +59,17 @@ PGB.plg.Edt.registerElm = function(elmPInstance) {
  * @constructor
  */
 PGB.plg.Edt.Tbr = function(context) {
-    var tbr, btn, item, tbrBody, tbrHead;
+    var t, tbr, tbrBtn, item, tbrBody, tbrHead, _this;
+    _this = this;
+    this._activeBtn = null;
+    this._buttons = {};
     tbrHead = $('<h1>');
     tbrHead.text('Tools');
     tbrBody = $('<ul>');
     for (t in PGB.plg.Edt.cmp) {
-        item = $('<li>');
-        item[0].id = PGB.utl.a('edt-tbr-{n}', {n:t.toLowerCase()});
-        if ($.isFunction(PGB.plg.Edt.cmp[t])) {
-            btn = new PGB.plg.Edt.cmp[t];
-            if (btn.name !== undefined) {
-                item.text(btn.name);
-                if ($.isFunction(btn.sel)) {
-                    item.click(function(e){
-                        btn.sel.apply(btn, [e]);
-                    });
-                }
-                tbrBody.append(item);
-            }
-        }
+        tbrBtn = new PGB.plg.Edt.Tbr.Btn(PGB.plg.Edt.cmp[t], this);
+        this.regButton(tbrBtn);
+        tbrBody.append(tbrBtn.elem);
     }
     tbr = $('<div>');
     tbr[0].id = 'edt-tbr';
@@ -110,6 +81,97 @@ PGB.plg.Edt.Tbr = function(context) {
     });
     this._tbr = tbr;
     return;
+};
+
+/**
+ * Registers a button
+ */
+PGB.plg.Edt.Tbr.prototype.findButton = function(btnID) {
+    return this._buttons[btnID];
+};
+
+
+/**
+ * Deselcts all elements on page
+ * 
+ * @param {Object[Event]} e
+ * @return {Bool}
+ */
+PGB.plg.Edt.Tbr.prototype.deselectBtns = function(e) {
+    var i, _i, t;
+    for (i in this._buttons) {
+        if ($.isFunction(this._buttons[i].desel)) {
+            this._buttons[i].desel();
+        }
+    }
+    return true;
+};
+
+/**
+ * Registers a button
+ */
+PGB.plg.Edt.Tbr.prototype.regButton = function(tbrBtn) {
+    this._buttons[tbrBtn._cmp.id] = tbrBtn;
+    return tbrBtn._cmp.id;
+};
+
+/**
+ * Initilizes a new button on the toolbar
+ * 
+ * @constructor
+ */
+PGB.plg.Edt.Tbr.Btn = function(tItem, tbrInstance) {
+    var item, btn, _this;
+    _this = this;
+    this.tbrInstance = tbrInstance;
+    if ($.isFunction(tItem)) {
+        this._cmp = new tItem;
+        this._cmp.btnInstance = this;
+        this.elem = $('<li>');
+        this.elem[0].id = PGB.utl.a('edt-tbr-{n}', {n:this._cmp.id});
+        if (this._cmp.name !== undefined) {
+            this.elem.text(this._cmp.name);
+            if ($.isFunction(this._cmp.sel)) {
+                this.elem.click(function(e){
+                    _this._sel.apply(_this, [e]);
+                });
+            }
+        }
+    }
+    return;
+};
+
+/**
+ * Select new toolbar btn (from event)
+ * 
+ */
+PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    this.sel();
+    return true;
+};
+
+/**
+ * Select new toolbar btn (from event)
+ * 
+ */
+PGB.plg.Edt.Tbr.Btn.prototype.sel = function(){
+    this.tbrInstance.deselectBtns();
+    this.elem.addClass('tbr-btn-active');
+    this._cmp.sel.apply(this._cmp);
+    return true;
+};
+
+
+/**
+ * Select new toolbar btn
+ * 
+ * @constructor
+ */
+PGB.plg.Edt.Tbr.Btn.prototype.desel = function(e){
+    this.elem.removeClass('tbr-btn-active');
+    this._cmp.desel.apply(this._cmp, [e]);
 };
 
 

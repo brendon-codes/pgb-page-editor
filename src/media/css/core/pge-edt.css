@@ -41,6 +41,11 @@
     cursor : pointer;
 }
 
+#pge-edt #edt-tbr li.tbr-btn-active
+{
+    background-color : #5FBF5F;
+}
+
 #pge-edt #edt-tbr li:hover
 {
     background-color : #CCC;
