@@ -62,6 +62,17 @@ PGB.utl.parent = function(child, parent) {
   return false;
 };
 
+PGB.utl.et = function(e) {
+    var t;
+    if (e.srcElement !== undefined) {
+        t = $(e.srcElement);
+    }
+    else if (e.target !== undefined) {
+        t = $(e.target);
+    }
+    return t;
+};
+
 /**
  * Returns dummy data
  * 

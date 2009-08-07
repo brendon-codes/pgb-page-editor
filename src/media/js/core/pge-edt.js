@@ -10,8 +10,14 @@ PGB.plg.Edt.elmP    = {};
  * @return {Bool}
  */
 PGB.plg.Edt.init = function(context) {
+    PGB.plg.Edt.fixBody();
     this.toolbar = new PGB.plg.Edt.Tbr(context);
     PGB.doc.mousedown(PGB.plg.Edt.deselectElms);
+    return true;
+};
+
+PGB.plg.Edt.fixBody = function() {
+    document.body.style.height = PGB.utl.a('{h}px', {h:window.innerHeight});
     return true;
 };
 
@@ -23,12 +29,7 @@ PGB.plg.Edt.init = function(context) {
  */
 PGB.plg.Edt.deselectElms = function(e) {
     var i, _i, t;
-    if (e.srcElement !== undefined) {
-        t = $(e.srcElement);
-    }
-    else if (e.target !== undefined) {
-        t = $(e.target);
-    }
+    t = PGB.utl.et(e);
     e.preventDefault();
     e.stopPropagation();
     for (i = 0, _i = PGB.plg.Edt.elms.length; i < _i; i++) {
@@ -48,9 +49,30 @@ PGB.plg.Edt.deselectElms = function(e) {
  * @return {Int}
  */
 PGB.plg.Edt.registerElm = function(elmPInstance) {
+    if (elmPInstance.elem === undefined) {
+        window.alert(
+            'ERROR: You cannot registerElm() an object ' +
+            'that does not have an "elem" property');
+    }
+    else {
+        // Add reverse lookup
+        elmPInstance.elem[0].pgbMap = {
+            elmPInstance : elmPInstance
+        };
+    }
     PGB.plg.Edt.elms[PGB.plg.Edt.elms.length] = elmPInstance;
     return PGB.plg.Edt.elms.length;
 };
+
+PGB.plg.Edt.findElm = function(elm) {
+    if (elm[0].pgbMap !== undefined) {
+        if (elm[0].pgbMap.elmPInstance !== undefined) {
+            return elm[0].pgbMap.elmPInstance;
+        }
+    }
+    return false;
+};
+
 
 /**
  * Setup the toolbar
@@ -87,7 +109,12 @@ PGB.plg.Edt.Tbr = function(context) {
  * Registers a button
  */
 PGB.plg.Edt.Tbr.prototype.findButton = function(btnID) {
-    return this._buttons[btnID];
+    if (this._buttons[btnID] === undefined) {
+        return false;
+    }
+    else {
+        return this._buttons[btnID];
+    }
 };
 
 

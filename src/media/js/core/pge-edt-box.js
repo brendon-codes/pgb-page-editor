@@ -54,7 +54,7 @@ PGB.plg.Edt.cmp.Box.prototype.desel = function(){
 PGB.plg.Edt.cmp.Box.prototype.act = function(e) {
     var boxElm, selectBtn;
     selectBtn = this.btnInstance.tbrInstance.findButton('select');
-    if (selectBtn !== undefined) {
+    if (selectBtn !== false) {
         selectBtn.sel();
     }
     boxElm = new PGB.plg.Edt.elmP.Box(this, e);
@@ -72,20 +72,14 @@ PGB.plg.Edt.cmp.Box.prototype.act = function(e) {
  */
 PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
     var x, y, w, h;
-    if (e.srcElement !== undefined) {
-        this._origParent = $(e.srcElement);
-    }
-    else if (e.target !== undefined) {
-        this._origParent = $(e.target);
-    }
+    this._origParent = PGB.utl.et(e);
     w = 200;
     h = 200;
     x = (e.clientX - this._origParent[0].offsetLeft) - (w / 2);
     y = (e.clientY - this._origParent[0].offsetTop) - (h / 2);
     this.elem = $('<div><span></span></div>');
+    this.elem.addClass('edt-box');
     this.elem.css({
-        border : '1px solid #F00',
-        backgroundColor : '#CCC',
         width : PGB.utl.a('{w}px', {w:w}),
         height : PGB.utl.a('{h}px', {h:h}),
         position : 'absolute',
@@ -109,6 +103,7 @@ PGB.plg.Edt.elmP.Box.prototype.sel = function() {
         snap : true
     });
     this.elem.resizable();
+    this.elem.addClass('edt-box-active');
     return true;
 };
 
@@ -122,6 +117,7 @@ PGB.plg.Edt.elmP.Box.prototype.sel = function() {
 PGB.plg.Edt.elmP.Box.prototype.desel = function() {
     this.elem.draggable('destroy');
     this.elem.resizable('destroy');
+    this.elem.removeClass('edt-box-active');
     return true;
 };
 
