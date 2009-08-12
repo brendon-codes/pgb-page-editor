@@ -1,12 +1,16 @@
 #pge-edt #edt-tbr
 {
-    border : 3px solid #CCC;
+    border-top : 3px solid #666;
+    border-right : 1px solid #CCC;
+    border-bottom : 1px solid #CCC;
+    border-left : 3px solid #666;
     background-color : #008000;
     width : 10em;
     margin : 0em;
     padding : 0em;
     font-family : sans-serif;
     min-height : 15em;
+    z-index : 999999;
 }
 
 #pge-edt #edt-tbr
@@ -31,6 +35,7 @@
     color : #FFF;
     margin : 0em;
     padding : 0em;
+    list-style-type : none;
 }
 
 #pge-edt #edt-tbr li

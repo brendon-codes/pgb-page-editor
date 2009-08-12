@@ -11,8 +11,8 @@ PGB.plg.Edt.elmP    = {};
  */
 PGB.plg.Edt.init = function(context) {
     PGB.plg.Edt.fixBody();
+    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
     this.toolbar = new PGB.plg.Edt.Tbr(context);
-    PGB.doc.mousedown(PGB.plg.Edt.deselectElms);
     return true;
 };
 
@@ -29,17 +29,20 @@ PGB.plg.Edt.fixBody = function() {
  */
 PGB.plg.Edt.deselectElms = function(e) {
     var i, _i, t;
+    //console.log(1);
     t = PGB.utl.et(e);
-    e.preventDefault();
-    e.stopPropagation();
     for (i = 0, _i = PGB.plg.Edt.elms.length; i < _i; i++) {
         if ($.isFunction(PGB.plg.Edt.elms[i].desel)) {
-            if (!PGB.utl.parent(t, PGB.plg.Edt.elms[i].elem)) {
+            if (
+                (t[0].pgbMap !== undefined &&
+                 t[0] !== PGB.plg.Edt.elms[i].elem[0]) ||
+                !PGB.utl.parent(t, PGB.plg.Edt.elms[i].elem)
+            ) {
                 PGB.plg.Edt.elms[i].desel();
             }
         }
     }
-    return true;
+    return false;
 };
 
 /**
@@ -64,6 +67,12 @@ PGB.plg.Edt.registerElm = function(elmPInstance) {
     return PGB.plg.Edt.elms.length;
 };
 
+/**
+ * Finds an elm
+ * 
+ * 
+ * @param {Object} elm
+ */
 PGB.plg.Edt.findElm = function(elm) {
     if (elm[0].pgbMap !== undefined) {
         if (elm[0].pgbMap.elmPInstance !== undefined) {
@@ -101,12 +110,18 @@ PGB.plg.Edt.Tbr = function(context) {
         cursor : 'move',
         handle : tbrHead
     });
+    tbr.mousedown(function(e) {
+        return false;
+    });
     this._tbr = tbr;
     return;
 };
 
 /**
- * Registers a button
+ * Finds a button
+ * 
+ * @param {String} btnID
+ * @return {Object[PGB.plg.Edt.Tbr.Btn]}
  */
 PGB.plg.Edt.Tbr.prototype.findButton = function(btnID) {
     if (this._buttons[btnID] === undefined) {
@@ -129,6 +144,9 @@ PGB.plg.Edt.Tbr.prototype.deselectBtns = function(e) {
     for (i in this._buttons) {
         if ($.isFunction(this._buttons[i].desel)) {
             this._buttons[i].desel();
+            // Not sure why this is needed,
+            // but we need to sometimes reset the document event handler
+            PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
         }
     }
     return true;
@@ -136,6 +154,9 @@ PGB.plg.Edt.Tbr.prototype.deselectBtns = function(e) {
 
 /**
  * Registers a button
+ * 
+ * @param {Object[PGB.plg.Edt.Tbr.Btn]} tbrBtn
+ * @return {String}
  */
 PGB.plg.Edt.Tbr.prototype.regButton = function(tbrBtn) {
     this._buttons[tbrBtn._cmp.id] = tbrBtn;
@@ -173,10 +194,8 @@ PGB.plg.Edt.Tbr.Btn = function(tItem, tbrInstance) {
  * 
  */
 PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
-    e.preventDefault();
-    e.stopPropagation();
     this.sel();
-    return true;
+    return false;
 };
 
 /**

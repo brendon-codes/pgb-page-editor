@@ -1,0 +1,10 @@
+#pge-edt .edt-box
+{
+    border : 1px solid #F00;
+    background-color : #CCF;
+}
+
+#pge-edt .edt-box-active
+{
+    border : 5px dashed #0F0;
+}

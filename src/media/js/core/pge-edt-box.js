@@ -22,12 +22,11 @@ PGB.plg.Edt.cmp.Box.prototype.sel = function() {
     var doc, _this;
     _this = this;
     this._actHandler = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
         _this.act(e);
+        return false;
     };
-    PGB.doc.unbind('click', this._actHandler);
-    PGB.doc.bind('click', this._actHandler);
+    PGB.doc.unbind('mousedown', this._actHandler);
+    PGB.doc.bind('mousedown', this._actHandler);
     return true;
 };
 
@@ -39,7 +38,7 @@ PGB.plg.Edt.cmp.Box.prototype.sel = function() {
  * @return {Bool}
  */
 PGB.plg.Edt.cmp.Box.prototype.desel = function(){
-    PGB.doc.unbind('click', this._actHandler);
+    PGB.doc.unbind('mousedown', this._actHandler);
     return true;
 };
 
@@ -87,6 +86,9 @@ PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
         top : y,
         left : x
     });
+    this.elem.draggable({
+        snap : true
+    });
     this._origParent.append(this.elem);
     return;
 };
@@ -99,9 +101,6 @@ PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
  * @return {Bool}
  */
 PGB.plg.Edt.elmP.Box.prototype.sel = function() {
-    this.elem.draggable({
-        snap : true
-    });
     this.elem.resizable();
     this.elem.addClass('edt-box-active');
     return true;
@@ -115,7 +114,6 @@ PGB.plg.Edt.elmP.Box.prototype.sel = function() {
  * @return {Bool}
  */
 PGB.plg.Edt.elmP.Box.prototype.desel = function() {
-    this.elem.draggable('destroy');
     this.elem.resizable('destroy');
     this.elem.removeClass('edt-box-active');
     return true;
