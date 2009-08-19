@@ -62,7 +62,12 @@ PGB.utl.parent = function(child, parent) {
   return false;
 };
 
-
+/**
+ * Get event element
+ * 
+ * @param {Object} e
+ * @return {Object[jQueryElement]}
+ */
 PGB.utl.et = function(e) {
     var t;
     if (e.srcElement !== undefined) {

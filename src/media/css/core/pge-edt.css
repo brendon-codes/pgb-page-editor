@@ -1,4 +1,4 @@
-#pge-edt #edt-tbr
+#pge-edt .edt-tbr
 {
     border-top : 3px solid #666;
     border-right : 1px solid #CCC;
@@ -13,14 +13,14 @@
     z-index : 999999;
 }
 
-#pge-edt #edt-tbr
+#pge-edt .edt-tbr
 {
     -moz-border-radius : 6px;
     -webkit-border-radius : 6px;
     -ms-border-radius : 6px; 
 }
 
-#pge-edt #edt-tbr h1
+#pge-edt .edt-tbr h1
 {
     border : 1px solid #CCC;
     background-color : orange;
@@ -30,7 +30,7 @@
     cursor : move;
 }
 
-#pge-edt #edt-tbr ul
+#pge-edt .edt-tbr ul
 {
     color : #FFF;
     margin : 0em;
@@ -38,7 +38,7 @@
     list-style-type : none;
 }
 
-#pge-edt #edt-tbr li
+#pge-edt .edt-tbr li
 {
     margin : 0px;
     background-color : #1F9F1F;
@@ -46,13 +46,17 @@
     cursor : pointer;
 }
 
-#pge-edt #edt-tbr li.tbr-btn-active
+#pge-edt .edt-tbr li.tbr-btn-active
 {
     background-color : #5FBF5F;
 }
 
-#pge-edt #edt-tbr li:hover
+#pge-edt .edt-tbr li:hover
 {
     background-color : #CCC;
 }
 
+#pge-edt .edt-tbr .edt-tbr-det
+{
+    
+}

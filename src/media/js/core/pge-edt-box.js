@@ -52,13 +52,13 @@ PGB.plg.Edt.cmp.Box.prototype.desel = function(){
  */
 PGB.plg.Edt.cmp.Box.prototype.act = function(e) {
     var boxElm, selectBtn;
+    boxElm = new PGB.plg.Edt.elmP.Box(this, e);
+    PGB.plg.Edt.registerElm(boxElm);
     selectBtn = this.btnInstance.tbrInstance.findButton('select');
     if (selectBtn !== false) {
         selectBtn.sel();
+        selectBtn._cmp.action(boxElm);
     }
-    boxElm = new PGB.plg.Edt.elmP.Box(this, e);
-    PGB.plg.Edt.registerElm(boxElm);
-    boxElm.sel();
     return true;
 };
 
@@ -119,8 +119,28 @@ PGB.plg.Edt.elmP.Box.prototype.desel = function() {
     return true;
 };
 
+/**
+ * Sets up box element instance details
+ * 
+ * @class PGB.plg.Edt.elmP.Box
+ * @method details
+ * @return {Object}
+ */
+PGB.plg.Edt.elmP.Box.prototype.details = function() {
+    return {};
+};
 
-
+/**
+ * Remove action for a box
+ * 
+ * @class PGB.plg.Edt.elmP.Box
+ * @method _remove
+ * @return {Bool}
+ */
+PGB.plg.Edt.elmP.Box.prototype.remove = function() {
+    console.log('REMOVE', this);
+    return true;
+};
 
 
 

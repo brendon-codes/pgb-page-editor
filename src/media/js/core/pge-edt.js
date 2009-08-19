@@ -1,5 +1,6 @@
 PGB.plg.Edt         = new PGB.Bse;
 PGB.plg.Edt.elms    = [];
+PGB.plg.Edt.tbrs    = [];
 PGB.plg.Edt.cmp     = {};
 PGB.plg.Edt.elmP    = {};
 
@@ -11,11 +12,57 @@ PGB.plg.Edt.elmP    = {};
  */
 PGB.plg.Edt.init = function(context) {
     PGB.plg.Edt.fixBody();
-    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
-    this.toolbar = new PGB.plg.Edt.Tbr(context);
+    PGB.plg.Edt.setMouse();
+    PGB.plg.Edt.regTbr(new PGB.plg.Edt.Tbr(context));
     return true;
 };
 
+/**
+ * Sets document-wide mousedown actions
+ * It is important to note that for some unknown reason we cannot safely lump
+ * multiple actions into one mousedown callback.
+ * 
+ * @return {Bool}
+ */
+PGB.plg.Edt.setMouse = function() {
+    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
+    PGB.doc.bind('mousedown', PGB.plg.Edt.remDetails);
+    return true;    
+};
+
+
+/**
+ * Removes details from toolbars
+ * 
+ * @return {Bool}
+ */
+PGB.plg.Edt.remDetails = function() {
+    var i, _i;
+    console.log(PGB.plg.Edt.tbrs);
+    for (i = 0, _i = PGB.plg.Edt.tbrs.length; i < _i; i++) {
+        if ($.isFunction(PGB.plg.Edt.tbrs[i].killDet)) {
+            PGB.plg.Edt.tbrs[i].killDet.apply(PGB.plg.Edt.tbrs[i]);
+        }
+    }
+    return true;
+};
+
+/**
+ * Registers a toolbar
+ * 
+ * @param {Object[PGB.plg.Edt.Tbr]} tbr
+ * @return {Bool}
+ */
+PGB.plg.Edt.regTbr = function(tbr) {
+    PGB.plg.Edt.tbrs[PGB.plg.Edt.tbrs.length] = tbr;
+    return true;
+};
+
+/**
+ * Fixes body height
+ * 
+ * @return {Bool}
+ */
 PGB.plg.Edt.fixBody = function() {
     document.body.style.height = PGB.utl.a('{h}px', {h:window.innerHeight});
     return true;
@@ -90,7 +137,7 @@ PGB.plg.Edt.findElm = function(elm) {
  * @constructor
  */
 PGB.plg.Edt.Tbr = function(context) {
-    var t, tbr, tbrBtn, item, tbrBody, tbrHead, _this;
+    var t, tbr, tbrBtn, item, tbrBody, tbrHead, _this, tbrDetails;
     _this = this;
     this._activeBtn = null;
     this._buttons = {};
@@ -102,9 +149,12 @@ PGB.plg.Edt.Tbr = function(context) {
         this.regButton(tbrBtn);
         tbrBody.append(tbrBtn.elem);
     }
+    this._detailsBox = $('<div>');
+    this._detailsBox.addClass('edt-tbr-det');
     tbr = $('<div>');
-    tbr[0].id = 'edt-tbr';
+    tbr.addClass('edt-tbr');
     tbr.append(tbrHead).append(tbrBody);
+    tbr.append(this._detailsBox);
     context.append(tbr);
     tbr.draggable({
         cursor : 'move',
@@ -116,6 +166,32 @@ PGB.plg.Edt.Tbr = function(context) {
     this._tbr = tbr;
     return;
 };
+
+/**
+ * Adds details to toolbar
+ * 
+ * @param {Object} elm
+ * @return {Bool}
+ */
+PGB.plg.Edt.Tbr.prototype.addDetails = function(det) {
+    var detForm;
+    detForm = new PGB.plg.Form(det);
+    this._detailsBox.html(detForm.elem);
+    return true;
+};
+
+/**
+ * Removes details from toolbar
+ * 
+ * @param {Object} elm
+ * @return {Bool}
+ */
+PGB.plg.Edt.Tbr.prototype.killDet = function() {
+    console.log(3);
+    this._detailsBox.empty();
+    return true;
+};
+
 
 /**
  * Finds a button
@@ -146,7 +222,7 @@ PGB.plg.Edt.Tbr.prototype.deselectBtns = function(e) {
             this._buttons[i].desel();
             // Not sure why this is needed,
             // but we need to sometimes reset the document event handler
-            PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
+            PGB.plg.Edt.setMouse();
         }
     }
     return true;
@@ -192,6 +268,11 @@ PGB.plg.Edt.Tbr.Btn = function(tItem, tbrInstance) {
 /**
  * Select new toolbar btn (from event)
  * 
+ * @private
+ * @class PGB.plg.Edt.Tbr.Btn
+ * @method _sel
+ * @param {Event} e
+ * @return {Bool}
  */
 PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
     this.sel();
@@ -201,6 +282,9 @@ PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
 /**
  * Select new toolbar btn (from event)
  * 
+ * @class PGB.plg.Edt.Tbr.Btn
+ * @method sel
+ * @return {Bool}
  */
 PGB.plg.Edt.Tbr.Btn.prototype.sel = function(){
     this.tbrInstance.deselectBtns();
@@ -213,11 +297,14 @@ PGB.plg.Edt.Tbr.Btn.prototype.sel = function(){
 /**
  * Select new toolbar btn
  * 
- * @constructor
+ * @class PGB.plg.Edt.Tbr.Btn
+ * @method desel
+ * @return {Bool}
  */
 PGB.plg.Edt.Tbr.Btn.prototype.desel = function(e){
     this.elem.removeClass('tbr-btn-active');
     this._cmp.desel.apply(this._cmp, [e]);
+    return true;
 };
 
 
