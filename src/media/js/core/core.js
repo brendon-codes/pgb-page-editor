@@ -26,6 +26,19 @@ PGB.init = function() {
 };
 
 /**
+ * Gets random id
+ * 
+ * @param {Int} max
+ * @return {Int}
+ */
+PGB.utl.rand = function(max){
+  if (max === null && maz === undefined) {
+      max = 99999999;
+  }
+  return Math.floor(Math.random() * max);
+};
+
+/**
  * Gets data args into string
  * 
  * @param {String} str

@@ -1,5 +1,5 @@
 PGB.plg.Edt         = new PGB.Bse;
-PGB.plg.Edt.elms    = [];
+PGB.plg.Edt.elms    = {};
 PGB.plg.Edt.tbrs    = [];
 PGB.plg.Edt.cmp     = {};
 PGB.plg.Edt.elmP    = {};
@@ -25,7 +25,7 @@ PGB.plg.Edt.init = function(context) {
  * @return {Bool}
  */
 PGB.plg.Edt.setMouse = function() {
-    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElms);
+    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElmsEvent);
     PGB.doc.bind('mousedown', PGB.plg.Edt.remDetails);
     return true;    
 };
@@ -38,7 +38,6 @@ PGB.plg.Edt.setMouse = function() {
  */
 PGB.plg.Edt.remDetails = function() {
     var i, _i;
-    console.log(PGB.plg.Edt.tbrs);
     for (i = 0, _i = PGB.plg.Edt.tbrs.length; i < _i; i++) {
         if ($.isFunction(PGB.plg.Edt.tbrs[i].killDet)) {
             PGB.plg.Edt.tbrs[i].killDet.apply(PGB.plg.Edt.tbrs[i]);
@@ -69,25 +68,48 @@ PGB.plg.Edt.fixBody = function() {
 };
 
 /**
+ * Wrapper function for deselectin all elms
+ * 
+ * @return {Bool}
+ */
+PGB.plg.Edt.deselectElmsEvent = function(e) {
+    var t;
+    t = PGB.utl.et(e);
+    PGB.plg.Edt.deselectElms(t);
+    return false;
+};
+
+/**
  * Deselcts all elements on page
  * 
  * @param {Object[Event]} e
  * @return {Bool}
  */
-PGB.plg.Edt.deselectElms = function(e) {
-    var i, _i, t;
-    //console.log(1);
-    t = PGB.utl.et(e);
-    for (i = 0, _i = PGB.plg.Edt.elms.length; i < _i; i++) {
+PGB.plg.Edt.deselectElms = function(t) {
+    var i, _i, t, exists;
+    exists = (t !== null && t !== undefined);
+    for (i in PGB.plg.Edt.elms) {
         if ($.isFunction(PGB.plg.Edt.elms[i].desel)) {
-            if (
-                (t[0].pgbMap !== undefined &&
-                 t[0] !== PGB.plg.Edt.elms[i].elem[0]) ||
-                !PGB.utl.parent(t, PGB.plg.Edt.elms[i].elem)
-            ) {
+            if (!exists || PGB.plg.Edt._canDesel(t, i)){
                 PGB.plg.Edt.elms[i].desel();
             }
         }
+    }
+    return false;
+};
+
+/**
+ * Determines if elm can desel
+ * 
+ * @param {jQueryElement} t
+ * @return {Bool}
+ */
+PGB.plg.Edt._canDesel = function(t, i) {
+    if (t[0].pgbMap !== undefined && t[0] !== PGB.plg.Edt.elms[i].elem[0]) {
+        return true;
+    }
+    if (!PGB.utl.parent(t, PGB.plg.Edt.elms[i].elem)) {
+        return true;
     }
     return false;
 };
@@ -98,20 +120,41 @@ PGB.plg.Edt.deselectElms = function(e) {
  * @param {Object[PGB.plg.Edt.elmP.Box]} elmPInstance
  * @return {Int}
  */
+PGB.plg.Edt.unregisterElm = function(elmPInstance) {
+    if (elmPInstance.regID !== undefined) {
+        PGB.plg.Edt.elms[elmPInstance.regID] = undefined;
+        delete PGB.plg.Edt.elms[elmPInstance.regID];
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+
+/**
+ * Unregisters an drawn element
+ * 
+ * @param {Object[PGB.plg.Edt.elmP.Box]} elmPInstance
+ * @return {Int}
+ */
 PGB.plg.Edt.registerElm = function(elmPInstance) {
+    var i;
     if (elmPInstance.elem === undefined) {
         window.alert(
             'ERROR: You cannot registerElm() an object ' +
             'that does not have an "elem" property');
+        return false;
     }
     else {
+        i = PGB.utl.a('a{id}', {id:PGB.utl.rand()});
         // Add reverse lookup
         elmPInstance.elem[0].pgbMap = {
             elmPInstance : elmPInstance
         };
+        elmPInstance.regID = i;
+        PGB.plg.Edt.elms[i] = elmPInstance;
+        return i;
     }
-    PGB.plg.Edt.elms[PGB.plg.Edt.elms.length] = elmPInstance;
-    return PGB.plg.Edt.elms.length;
 };
 
 /**
@@ -187,7 +230,6 @@ PGB.plg.Edt.Tbr.prototype.addDetails = function(det) {
  * @return {Bool}
  */
 PGB.plg.Edt.Tbr.prototype.killDet = function() {
-    console.log(3);
     this._detailsBox.empty();
     return true;
 };

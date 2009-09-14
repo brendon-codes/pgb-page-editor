@@ -138,7 +138,11 @@ PGB.plg.Edt.elmP.Box.prototype.details = function() {
  * @return {Bool}
  */
 PGB.plg.Edt.elmP.Box.prototype.remove = function() {
-    console.log('REMOVE', this);
+    PGB.plg.Edt.deselectElms();
+    PGB.plg.Edt.remDetails();
+    PGB.plg.Edt.unregisterElm(this);
+    this.elem.remove();
+    delete this;
     return true;
 };
 

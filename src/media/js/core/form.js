@@ -6,7 +6,7 @@
  * @param {Object} det
  */
 PGB.plg.Form = function(det) {
-    var t, tp, e, i;
+    var t, tp, e, i, f;
     this.elem = $('<ul>');
     for (f in det) {
         if (det[f].type !== undefined) {
