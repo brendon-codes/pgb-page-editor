@@ -252,6 +252,9 @@ PGB.plg.Edt.Tbr = function(context) {
         cursor : 'move',
         handle : tbrHead
     });
+    tbr.mousedown(function() {
+       return false; 
+    });
     this.elem = tbr;
     return;
 };
@@ -336,6 +339,7 @@ PGB.plg.Edt.Tbr.Btn = function(tItem, tbrInstance) {
     var item, btn, _this;
     _this = this;
     this.tbrInstance = tbrInstance;
+    this.isSelected = false;
     if ($.isFunction(tItem)) {
         this._cmp = new tItem;
         this._cmp.btnInstance = this;
@@ -375,15 +379,22 @@ PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
  * @return {Bool}
  */
 PGB.plg.Edt.Tbr.Btn.prototype.sel = function(){
-    this.tbrInstance.deselectBtns();
-    this.elem.addClass('tbr-btn-active');
-    this._cmp.sel.apply(this._cmp);
-    return true;
+    if (this.tbrInstance._activeBtn !== this) {
+        this.tbrInstance._activeBtn = this;
+        PGB.plg.Edt.remDetails();
+        this.tbrInstance.deselectBtns();
+        this.elem.addClass('tbr-btn-active');
+        this._cmp.sel.apply(this._cmp);
+        return true;
+    }
+    else {
+        return false;
+    }
 };
 
 
 /**
- * Select new toolbar btn
+ * UnSelect toolbar btn
  * 
  * @class PGB.plg.Edt.Tbr.Btn
  * @method desel

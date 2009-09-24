@@ -61,3 +61,38 @@ PGB.plg.Form.type.Button = function(detCmp) {
     });
     return;
 };
+
+
+/**
+ * Form type remove constructor
+ * 
+ * @constructor
+ * @param {Object} detCmp
+ */
+PGB.plg.Form.type.Select = function(detCmp) {
+    var i;
+    if (detCmp.values === undefined) {
+        this.elem = null;
+    }
+    if ($.isFunction(detCmp.action)) {
+        this.elem = null;
+    }
+    if (detCmp.instance === undefined) {
+        detCmp.instance = window;
+    }
+    this.elem = $('<select>');
+    for (i in detCmp.values) {
+        opt = $('<option>');
+        opt.val(i);
+        opt.text(detCmp.values[i]);
+        this.elem[0].add(opt[0], null);
+    }
+    this.elem.change(function() {
+        var elm;
+        elm = $(this);
+        detCmp.action.apply(detCmp.instance, [elm.val()]);
+        return false;    
+    });
+    return;
+};
+

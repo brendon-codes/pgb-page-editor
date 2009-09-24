@@ -131,7 +131,30 @@ PGB.plg.Edt.elmP.Box.prototype.desel = function() {
  * @return {Object}
  */
 PGB.plg.Edt.elmP.Box.prototype.details = function() {
-    return {};
+    var out;
+    out = {};
+    out.bgcolor = {
+        type: 'select',
+        values: {
+            'FF0000' : 'Red',
+            '00FF00' : 'Green',
+            '0000FF' : 'Blue'
+        },
+        action: this.bgColor,
+        instance: this
+    };
+    return out;
+};
+
+/**
+ * Action to change bgColor
+ * 
+ * 
+ */
+PGB.plg.Edt.elmP.Box.prototype.bgColor = function(val) {
+    this.elem.css({
+        backgroundColor : PGB.utl.a('#{val}', {val:val})
+    });
 };
 
 /**
