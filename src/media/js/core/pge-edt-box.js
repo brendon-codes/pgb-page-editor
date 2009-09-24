@@ -70,8 +70,11 @@ PGB.plg.Edt.cmp.Box.prototype.act = function(e) {
  * @param {Object[Event]} e
  */
 PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
-    var x, y, w, h;
+    var x, y, w, h, r, g, b;
     this._origParent = PGB.utl.et(e);
+    r = Math.floor(Math.random() * 255);
+    g = Math.floor(Math.random() * 255);
+    b = Math.floor(Math.random() * 255);
     w = 200;
     h = 200;
     x = (e.clientX - this._origParent[0].offsetLeft) - (w / 2);
@@ -81,6 +84,7 @@ PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
     this.elem.css({
         width : PGB.utl.a('{w}px', {w:w}),
         height : PGB.utl.a('{h}px', {h:h}),
+        backgroundColor : PGB.utl.a('RGB({r},{g},{b})',{r:r,g:g,b:b}),
         position : 'absolute',
         overflow : 'hidden',
         top : y,

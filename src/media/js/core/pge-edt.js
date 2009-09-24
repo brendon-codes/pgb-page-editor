@@ -25,9 +25,50 @@ PGB.plg.Edt.init = function(context) {
  * @return {Bool}
  */
 PGB.plg.Edt.setMouse = function() {
-    PGB.doc.bind('mousedown', PGB.plg.Edt.deselectElmsEvent);
-    PGB.doc.bind('mousedown', PGB.plg.Edt.remDetails);
+    PGB.doc.bind('mousedown', function(e){
+        if (!PGB.plg.Edt.onToolbar(e)) {
+            PGB.plg.Edt.deselectElmsEvent(e);
+            PGB.plg.Edt.remDetails();
+        }
+        return true;
+    });
     return true;    
+};
+
+/**
+ * Checks if event occurred on toolbar
+ * 
+ * @param {Object[Event]} e
+ * @return {Bool}
+ */
+PGB.plg.Edt.onToolbar = function(e) {
+    var i, _i, t, tbr;
+    t = PGB.utl.et(e);
+    for (i = 0, _i = PGB.plg.Edt.tbrs.length; i < _i; i++) {
+        tbr = PGB.plg.Edt.tbrs[i].elem;
+        if (PGB.utl.parent(t, tbr)) {
+            return true;
+        }
+    }
+    return false;    
+};
+
+/**
+ * Checks if event occurred on elm (drawn elm)
+ * 
+ * @param {Object[Event]} e
+ * @return {Bool}
+ */
+PGB.plg.Edt.onElms = function(e) {
+    var i, t, elm;
+    t = PGB.utl.et(e);
+    for (i in PGB.plg.Edt.elms) {
+        elm = PGB.plg.Edt.elms[i].elem;
+        if (PGB.utl.parent(t, elm)) {
+            return true;
+        }
+    }
+    return false;
 };
 
 
@@ -45,6 +86,7 @@ PGB.plg.Edt.remDetails = function() {
     }
     return true;
 };
+
 
 /**
  * Registers a toolbar
@@ -88,6 +130,7 @@ PGB.plg.Edt.deselectElmsEvent = function(e) {
 PGB.plg.Edt.deselectElms = function(t) {
     var i, _i, t, exists;
     exists = (t !== null && t !== undefined);
+    //console.log(PGB.plg.Edt.elms);
     for (i in PGB.plg.Edt.elms) {
         if ($.isFunction(PGB.plg.Edt.elms[i].desel)) {
             if (!exists || PGB.plg.Edt._canDesel(t, i)){
@@ -146,7 +189,8 @@ PGB.plg.Edt.registerElm = function(elmPInstance) {
         return false;
     }
     else {
-        i = PGB.utl.a('a{id}', {id:PGB.utl.rand()});
+        i = PGB.utl.rand();
+        //console.log(i);
         // Add reverse lookup
         elmPInstance.elem[0].pgbMap = {
             elmPInstance : elmPInstance
@@ -160,14 +204,19 @@ PGB.plg.Edt.registerElm = function(elmPInstance) {
 /**
  * Finds an elm
  * 
+ * @param {Object[jQuery]} elm
+ * @return {Object[PGB.plg.Edt.elmP.Box]}
  * 
- * @param {Object} elm
  */
 PGB.plg.Edt.findElm = function(elm) {
-    if (elm[0].pgbMap !== undefined) {
-        if (elm[0].pgbMap.elmPInstance !== undefined) {
-            return elm[0].pgbMap.elmPInstance;
+    elm = elm[0];
+    while (elm !== undefined && elm !== null) {
+        if (elm.pgbMap !== undefined) {
+            if (elm.pgbMap.elmPInstance !== undefined) {
+                return elm.pgbMap.elmPInstance;
+            }
         }
+        elm = elm.parentNode;
     }
     return false;
 };
@@ -203,10 +252,7 @@ PGB.plg.Edt.Tbr = function(context) {
         cursor : 'move',
         handle : tbrHead
     });
-    tbr.mousedown(function(e) {
-        return false;
-    });
-    this._tbr = tbr;
+    this.elem = tbr;
     return;
 };
 

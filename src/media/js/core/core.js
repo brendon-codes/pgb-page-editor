@@ -32,7 +32,7 @@ PGB.init = function() {
  * @return {Int}
  */
 PGB.utl.rand = function(max){
-  if (max === null && maz === undefined) {
+  if (max === null || max === undefined) {
       max = 99999999;
   }
   return Math.floor(Math.random() * max);
