@@ -6,7 +6,8 @@
  * @constructor
  */
 PGB.plg.Edt.Tbr = function(context) {
-    var t, tbr, tbrBtn, item, tbrBody, tbrHead, _this, tbrDetails;
+    var t, tbr, tbrBtn, item, tbrBody, tbrHead,
+        _this, tbrDetails, tbrBodyCont, tbrBtnPrim;
     _this = this;
     this._activeBtn = null;
     this._buttons = {};
@@ -17,13 +18,20 @@ PGB.plg.Edt.Tbr = function(context) {
         tbrBtn = new PGB.plg.Edt.Tbr.Btn(PGB.plg.Edt.cmp[t], this);
         this.regButton(tbrBtn);
         tbrBody.append(tbrBtn.elem);
-    }
+    }    
     this._detailsBox = $('<div>');
     this._detailsBox.addClass('edt-tbr-det');
+    tbrBtnPrim = $('<div>');
+    tbrBtnPrim.addClass('edt-tbr-prim');
+    tbrBtnPrim.append(tbrBody);
+    tbrBodyCont = $('<div>');
+    tbrBodyCont.addClass('edt-tbr-bdycnt');
+    tbrBodyCont.append(tbrBtnPrim);
+    tbrBodyCont.append(this._detailsBox);
     tbr = $('<div>');
     tbr.addClass('edt-tbr');
-    tbr.append(tbrHead).append(tbrBody);
-    tbr.append(this._detailsBox);
+    tbr.append(tbrHead);
+    tbr.append(tbrBodyCont);
     context.append(tbr);
     tbr.draggable({
         cursor : 'move',
@@ -59,13 +67,20 @@ PGB.plg.Edt.Tbr.prototype.getActiveBtn = function() {
 /**
  * Adds details to toolbar
  * 
+ * @param {Object[PGB.plg.Edt.cmp.FOO]} edtCmp
  * @param {Object} elm
  * @return {Bool}
  */
-PGB.plg.Edt.Tbr.prototype.addDetails = function(det) {
-    var detForm;
+PGB.plg.Edt.Tbr.prototype.addDetails = function(edtCmp, det) {
+    var detForm, x, y;
     detForm = new PGB.plg.Form(det);
     this._detailsBox.html(detForm.elem);
+    y = edtCmp.btnInstance.elem.position().top;
+    x = -this._detailsBox.outerWidth();
+    this._detailsBox.css({
+        top : PGB.utl.a('{y}px', {y:y}),
+        right : PGB.utl.a('{x}px', {x:x})
+    });
     return true;
 };
 

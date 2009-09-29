@@ -30,6 +30,16 @@
     cursor : move;
 }
 
+#pge-edt .edt-tbr .edt-tbr-prim li
+{
+    background-color : #030;
+}
+
+#pge-edt .edt-tbr .edt-tbr-det li
+{
+    background-color : #444;
+}
+
 #pge-edt .edt-tbr ul
 {
     color : #FFF;
@@ -41,7 +51,6 @@
 #pge-edt .edt-tbr li
 {
     margin : 0px;
-    background-color : #1F9F1F;
     padding : .3em 1.5em .3em 10px;
     cursor : pointer;
 }
@@ -56,7 +65,12 @@
     background-color : #CCC;
 }
 
+#pge-edt .edt-tbr .edt-tbr-bdycnt
+{
+    position : relative;
+}
+
 #pge-edt .edt-tbr .edt-tbr-det
 {
-    
+    position : absolute;
 }

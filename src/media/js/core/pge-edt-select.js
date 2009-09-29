@@ -79,7 +79,7 @@ PGB.plg.Edt.cmp.Select.prototype.action = function(elmPInstance) {
     if ($.isFunction(elmPInstance.details)) {
         det = this.detailsDef(elmPInstance);
         det = $.extend(det, elmPInstance.details());
-        this.btnInstance.tbrInstance.addDetails(det);
+        this.btnInstance.tbrInstance.addDetails(this, det);
     }
     return true;
 };
