@@ -1,3 +1,6 @@
+PGB.include('editor.components.toolbar', 'button', 2);
+PGB.include('editor.components.toolbar', 'details', 2);
+
 
 /**
  * Setup the toolbar
@@ -78,8 +81,8 @@ PGB.plg.Edt.Tbr.prototype.addDetails = function(edtCmp, det) {
     y = edtCmp.btnInstance.elem.position().top;
     x = -this._detailsBox.outerWidth();
     this._detailsBox.css({
-        top : PGB.utl.a('{y}px', {y:y}),
-        right : PGB.utl.a('{x}px', {x:x})
+        top : PGB.a('{y}px', {y:y}),
+        right : PGB.a('{x}px', {x:x})
     });
     return true;
 };

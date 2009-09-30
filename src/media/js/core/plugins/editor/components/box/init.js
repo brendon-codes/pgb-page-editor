@@ -82,9 +82,9 @@ PGB.plg.Edt.elmP.Box = function(boxCmp, e) {
     this.elem = $('<div><span></span></div>');
     this.elem.addClass('edt-box');
     this.elem.css({
-        width : PGB.utl.a('{w}px', {w:w}),
-        height : PGB.utl.a('{h}px', {h:h}),
-        backgroundColor : PGB.utl.a('RGB({r},{g},{b})',{r:r,g:g,b:b}),
+        width : PGB.a('{w}px', {w:w}),
+        height : PGB.a('{h}px', {h:h}),
+        backgroundColor : PGB.a('RGB({r},{g},{b})',{r:r,g:g,b:b}),
         position : 'absolute',
         overflow : 'hidden',
         top : y,
@@ -135,6 +135,7 @@ PGB.plg.Edt.elmP.Box.prototype.details = function() {
     out = {};
     out.bgcolor = {
         type: 'select',
+        value: 'BG Color',
         values: {
             'FF0000' : 'Red',
             '00FF00' : 'Green',
@@ -153,7 +154,7 @@ PGB.plg.Edt.elmP.Box.prototype.details = function() {
  */
 PGB.plg.Edt.elmP.Box.prototype.bgColor = function(val) {
     this.elem.css({
-        backgroundColor : PGB.utl.a('#{val}', {val:val})
+        backgroundColor : PGB.a('#{val}', {val:val})
     });
 };
 

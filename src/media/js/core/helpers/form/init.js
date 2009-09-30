@@ -70,7 +70,7 @@ PGB.plg.Form.type.Button = function(detCmp) {
  * @param {Object} detCmp
  */
 PGB.plg.Form.type.Select = function(detCmp) {
-    var i;
+    var i, lbl;
     if (detCmp.values === undefined) {
         this.elem = null;
     }
@@ -80,19 +80,25 @@ PGB.plg.Form.type.Select = function(detCmp) {
     if (detCmp.instance === undefined) {
         detCmp.instance = window;
     }
-    this.elem = $('<select>');
+    this.elem = $('<div>');
+    if (detCmp.value !== undefined) {
+        lbl = $('<span>').text(detCmp.value);
+        this.elem.append(lbl);
+    }
+    elm = $('<select>');
     for (i in detCmp.values) {
         opt = $('<option>');
         opt.val(i);
         opt.text(detCmp.values[i]);
-        this.elem[0].add(opt[0], null);
+        elm[0].add(opt[0], null);
     }
-    this.elem.change(function() {
-        var elm;
-        elm = $(this);
-        detCmp.action.apply(detCmp.instance, [elm.val()]);
+    elm.change(function() {
+        var _elm;
+        _elm = $(this);
+        detCmp.action.apply(detCmp.instance, [_elm.val()]);
         return false;    
     });
+    this.elem.append(elm);
     return;
 };
 

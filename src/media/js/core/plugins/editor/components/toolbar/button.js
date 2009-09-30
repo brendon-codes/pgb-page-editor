@@ -13,7 +13,7 @@ PGB.plg.Edt.Tbr.Btn = function(tItem, tbrInstance) {
         this._cmp = new tItem;
         this._cmp.btnInstance = this;
         this.elem = $('<li>');
-        this.elem[0].id = PGB.utl.a('edt-tbr-{n}', {n:this._cmp.id});
+        this.elem[0].id = PGB.a('edt-tbr-{n}', {n:this._cmp.id});
         if (this._cmp.name !== undefined) {
             this.elem.text(this._cmp.name);
             if ($.isFunction(this._cmp.sel)) {
