@@ -1,6 +1,6 @@
 PGB.include('core', 'helpers.util', 1);
-PGB.include('core', 'helpers.form', 1);
-PGB.include('editor', 'components.toolbar', 1);
+PGB.include('editor', 'toolbar', 1);
+PGB.include('editor', 'toolbar.primary', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);
 
@@ -23,11 +23,13 @@ PGB.plg.Edt = Base.extend(null, {
      * @return {Bool}
      */
     go : function(context) {
-        var primTbr;
+        var primTbr, detTbr;
         this.fixBody();
         this.setMouse();
-        primTbr = new this.Tbr(context);
+        primTbr = new this.TbrPrim(context);
+        detTbr = new this.Tbr(context, 'Details');
         this.regTbr(primTbr);
+        this.regTbr(detTbr);
         return true;
     },
     

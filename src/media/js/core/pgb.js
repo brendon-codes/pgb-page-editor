@@ -79,7 +79,7 @@ var PGB = Base.extend(null, {
         this._modules['core'] = path;
         return true;
     },
-    
+
     /**
      * Includes a js file
      * 
@@ -130,6 +130,7 @@ var PGB = Base.extend(null, {
         this._writeInclude(inc);
         return true;
     },
+
     
     /**
      * Writes the actual js include
