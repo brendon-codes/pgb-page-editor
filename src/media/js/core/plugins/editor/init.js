@@ -24,12 +24,11 @@ PGB.plg.Edt = Base.extend(null, {
      */
     go : function(context) {
         var primTbr, detTbr;
+        this.context = context;
         this.fixBody();
         this.setMouse();
-        primTbr = new this.TbrPrim(context);
-        detTbr = new this.Tbr(context, 'Details');
+        primTbr = new this.TbrPrim();
         this.regTbr(primTbr);
-        this.regTbr(detTbr);
         return true;
     },
     

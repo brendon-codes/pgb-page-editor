@@ -80,7 +80,8 @@ PGB.plg.Edt.cmp.Select = Base.extend({
         if ($.isFunction(elmPInstance.details)) {
             det = this.detailsDef(elmPInstance);
             det = $.extend(det, elmPInstance.details());
-            this.btnInstance.tbrInstance.addDetails(this, det);
+            //this.btnInstance.tbrInstance.addDetails(this, det);
+            new PGB.plg.Edt.Tbr('Details');
         }
         return true;
     },

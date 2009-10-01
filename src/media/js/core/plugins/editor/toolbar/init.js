@@ -14,7 +14,7 @@ PGB.plg.Edt.Tbr = Base.extend({
      * @param {Object[HTMLElement]} context
      * @constructor
      */
-    constructor : function(context, headText) {
+    constructor : function(headText) {
         var _this;
         _this = this;
         this.tbrHead = $('<h1>');
@@ -25,7 +25,7 @@ PGB.plg.Edt.Tbr = Base.extend({
         this.elem.addClass('edt-tbr');
         this.elem.append(this.tbrHead);
         this.elem.append(this.tbrBodyCont);
-        context.append(this.elem);
+        PGB.plg.Edt.context.append(this.elem);
         this.elem.draggable({
             cursor : 'move',
             handle : this.tbrHead

@@ -6,10 +6,10 @@ PGB.plg.Edt.TbrPrim = PGB.plg.Edt.Tbr.extend({
      * @param {Object[HTMLElement]} context
      * @constructor
      */
-    constructor : function(context) {
+    constructor : function() {
         var _this, tbrBody, t, tbrBtn, tbrBtnPrim;
         _this = this;
-        this.base(context, 'Tools');
+        this.base('Tools');
         this._activeBtn = null;
         this._buttons = {};
         tbrBody = $('<ul>');
