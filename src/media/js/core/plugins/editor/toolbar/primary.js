@@ -49,37 +49,6 @@ PGB.plg.Edt.TbrPrim = PGB.plg.Edt.Tbr.extend({
     },
     
     /**
-     * Adds details to toolbar
-     * 
-     * @param {Object[PGB.plg.Edt.cmp.FOO]} edtCmp
-     * @param {Object} elm
-     * @return {Bool}
-     */
-    addDetails : function(edtCmp, det) {
-        var detForm, x, y;
-        detForm = new PGB.plg.Form(det);
-        this._detailsBox.html(detForm.elem);
-        y = edtCmp.btnInstance.elem.position().top;
-        x = -this._detailsBox.outerWidth();
-        this._detailsBox.css({
-            top : PGB.a('{y}px', {y:y}),
-            right : PGB.a('{x}px', {x:x})
-        });
-        return true;
-    },
-    
-    /**
-     * Removes details from toolbar
-     * 
-     * @param {Object} elm
-     * @return {Bool}
-     */
-    killDet : function() {
-        this._detailsBox.empty();
-        return true;
-    },
-    
-    /**
      * Finds a button
      * 
      * @param {String} btnID

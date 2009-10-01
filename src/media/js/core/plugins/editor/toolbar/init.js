@@ -33,7 +33,21 @@ PGB.plg.Edt.Tbr = Base.extend({
         this.elem.mousedown(function() {
            return false; 
         });
+        PGB.plg.Edt.regTbr(this);
         return;
+    },
+
+    /**
+     * Destructor for this toolbar
+     * 
+     * @return {Bool}
+     * @destructor
+     */
+    destroy : function() {
+        PGB.plg.Edt.unregisterTbr(this);
+        this.elem.remove();
+        delete this;
+        return true;
     }
     
 });

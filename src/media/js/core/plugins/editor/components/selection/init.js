@@ -53,7 +53,7 @@ PGB.plg.Edt.cmp.Select = Base.extend({
      * @return {Bool}
      */
     act : function(e) {
-        var t, det, detElm;
+        var t, det, detElm, elmPInstance;
         t = PGB.utl.et(e);
         elmPInstance = PGB.plg.Edt.findElm(t);
         if (elmPInstance !== false) {
@@ -71,7 +71,7 @@ PGB.plg.Edt.cmp.Select = Base.extend({
      * @return {Bool}
      */
     action : function(elmPInstance) {
-        var det;
+        var det, tbrDet;
         // selection action
         if ($.isFunction(elmPInstance.sel)) {
             elmPInstance.sel();
@@ -80,8 +80,7 @@ PGB.plg.Edt.cmp.Select = Base.extend({
         if ($.isFunction(elmPInstance.details)) {
             det = this.detailsDef(elmPInstance);
             det = $.extend(det, elmPInstance.details());
-            //this.btnInstance.tbrInstance.addDetails(this, det);
-            new PGB.plg.Edt.Tbr('Details');
+            tbrDet = new PGB.plg.Edt.TbrDet(det);
         }
         return true;
     },
@@ -95,14 +94,6 @@ PGB.plg.Edt.cmp.Select = Base.extend({
     detailsDef : function(elmPInstance){
         var out;
         out = {};
-        if ($.isFunction(elmPInstance.remove)) {
-            out.remove = {
-                type: 'button',
-                value: 'Remove',
-                action: elmPInstance.remove,
-                instance: elmPInstance
-            };
-        };
         return out;
     }
 

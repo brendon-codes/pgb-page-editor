@@ -50,6 +50,7 @@ PGB.plg.Edt.Tbr.Btn.prototype._sel = function(e){
 PGB.plg.Edt.Tbr.Btn.prototype.sel = function(){
     if (this.tbrInstance.getActiveBtn() !== this) {
         this.tbrInstance.setActiveBtn(this);
+        PGB.plg.Edt.deselectElms();
         PGB.plg.Edt.remDetails();
         this.tbrInstance.deselectBtns();
         this.elem.addClass('tbr-btn-active');

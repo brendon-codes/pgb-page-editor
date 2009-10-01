@@ -32,6 +32,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             snap : true
         });
         this._origParent.append(this.elem);
+        PGB.plg.Edt.registerElm(this);
         return;
     },
 
@@ -82,6 +83,20 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             action: this.bgColor,
             instance: this
         };
+        out.remove = {
+            type: 'button',
+            value: 'Remove',
+            action: this.destroy,
+            instance: this
+        };
+        /*
+        out.sendBackward = {
+            type : 'button',
+            value : 'Send Backward',
+            action : this.sendBackward,
+            instance : this
+        };
+        */
         return out;
     },
 
@@ -103,9 +118,23 @@ PGB.plg.Edt.elmP.Box = Base.extend({
      * @method _remove
      * @return {Bool}
      */
-    remove : function() {
+    destroy : function() {
         PGB.plg.Edt.deselectElms();
         PGB.plg.Edt.remDetails();
+        // Recusively remove child elements
+        (function(elm){
+            var i, _i, c;
+            for (i = 0, _i = elm.childNodes.length; i < _i; i++) {
+                c = elm.childNodes[i];
+                if (c.pgbMap !== undefined &&
+                        c.pgbMap.elmPInstance !== undefined) {
+                    if ($.isFunction(c.pgbMap.elmPInstance.destroy)) {
+                        c.pgbMap.elmPInstance.destroy();
+                    }
+                }
+                arguments.callee(c);
+            }
+        })(this.elem[0]);
         PGB.plg.Edt.unregisterElm(this);
         this.elem.remove();
         delete this;

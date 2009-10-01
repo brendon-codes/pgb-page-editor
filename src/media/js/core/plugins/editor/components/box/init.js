@@ -57,7 +57,6 @@ PGB.plg.Edt.cmp.Box = Base.extend({
     act : function(e) {
         var boxElm, selectBtn;
         boxElm = new PGB.plg.Edt.elmP.Box(this, e);
-        PGB.plg.Edt.registerElm(boxElm);
         selectBtn = this.btnInstance.tbrInstance.findButton('select');
         if (selectBtn !== false) {
             selectBtn.sel();

@@ -1,6 +1,7 @@
 PGB.include('core', 'helpers.util', 1);
 PGB.include('editor', 'toolbar', 1);
 PGB.include('editor', 'toolbar.primary', 2);
+PGB.include('editor', 'toolbar.details', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);
 
@@ -12,9 +13,24 @@ PGB.plg.Edt = Base.extend(null, {
      * Properties
      */
     elms : {},
-    tbrs : [],
+    tbrs : {},
     cmp : {},
     elmP : {},
+    ERR : {
+        ELM_NO_ELEM : [
+            0, 'ELM_NO_ELEM',
+            'You cannot register an elm ' +
+                'that does not have an "elem" property'
+        ],
+        ELM_NO_REGID : [
+            1, 'ELM_NO_REGID',
+            'Trying to unregister an elm without a regID'
+        ],
+        TBR_NO_REGID : [
+            2, 'TBR_NO_REGID',
+            'Trying to unregister a toolbar without a regID'
+        ]
+    },
     
     /**
      * Editor plugin initilizaer
@@ -28,7 +44,6 @@ PGB.plg.Edt = Base.extend(null, {
         this.fixBody();
         this.setMouse();
         primTbr = new this.TbrPrim();
-        this.regTbr(primTbr);
         return true;
     },
     
@@ -62,7 +77,7 @@ PGB.plg.Edt = Base.extend(null, {
     onToolbar : function(e) {
         var i, _i, t, tbr;
         t = PGB.utl.et(e);
-        for (i = 0, _i = this.tbrs.length; i < _i; i++) {
+        for (i in this.tbrs) {
             tbr = this.tbrs[i].elem;
             if (PGB.utl.parent(t, tbr)) {
                 return true;
@@ -97,9 +112,10 @@ PGB.plg.Edt = Base.extend(null, {
      */
     remDetails : function() {
         var i, _i;
-        for (i = 0, _i = this.tbrs.length; i < _i; i++) {
-            if ($.isFunction(this.tbrs[i].killDet)) {
-                this.tbrs[i].killDet.apply(this.tbrs[i]);
+        for (i in this.tbrs) {
+            if (this.tbrs[i] instanceof PGB.plg.Edt.TbrDet &&
+                    $.isFunction(this.tbrs[i].destroy)) {
+                this.tbrs[i].destroy();
             }
         }
         return true;
@@ -113,8 +129,26 @@ PGB.plg.Edt = Base.extend(null, {
      * @return {Bool}
      */
     regTbr : function(tbr) {
-        this.tbrs[this.tbrs.length] = tbr;
+        tbr.regID = PGB.utl.rand();
+        this.tbrs[tbr.regID] = tbr;
         return true;
+    },
+    
+    /**
+     * Unregisters a toolbar
+     * 
+     * @param {Object[PGB.plg.Edt.Tbr]} tbr
+     */
+    unregisterTbr : function(tbr) {
+        if (tbr.regID !== undefined) {
+            this.tbrs[tbr.regID] = undefined;
+            delete this.tbrs[tbr.regID];
+            return true;
+        }
+        else {
+            throw this.ERR.TBR_NO_REGID;
+            return false;
+        }
     },
     
     /**
@@ -189,6 +223,7 @@ PGB.plg.Edt = Base.extend(null, {
             return true;
         }
         else {
+            throw this.ERR.ELM_NO_REGID;
             return false;
         }
     },
@@ -202,9 +237,7 @@ PGB.plg.Edt = Base.extend(null, {
     registerElm : function(elmPInstance) {
         var i;
         if (elmPInstance.elem === undefined) {
-            window.alert(
-                'ERROR: You cannot registerElm() an object ' +
-                'that does not have an "elem" property');
+            throw this.ERR.ELM_NO_ELEM;
             return false;
         }
         else {

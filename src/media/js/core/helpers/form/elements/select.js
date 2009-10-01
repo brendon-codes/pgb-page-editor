@@ -8,7 +8,7 @@ PGB.plg.Form.type.Select = PGB.plg.Form.type.Element.extend({
      * @param {Object} detCmp
      */
     constructor : function(detCmp) {
-        var i, lbl;
+        var i, lbl, elm, opt;
         if (detCmp.values === undefined) {
             this.elem = null;
         }
