@@ -20,7 +20,7 @@ var PGB = Base.extend(null, {
      * Preliminary checks
      * 
      */
-    initiator : function() {
+    init : function() {
         var _this;
         _this = this;
         if (window.jQuery === undefined) {
@@ -146,4 +146,4 @@ var PGB = Base.extend(null, {
 
 });
 
-PGB.initiator();
+

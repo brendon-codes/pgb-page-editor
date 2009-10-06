@@ -8,15 +8,16 @@
 PGB.plg.Edt.elmP.Box = Base.extend({
 
     constructor : function(boxCmp, e) {
-        var x, y, w, h, r, g, b;
+        var x, y, w, h, r, g, b, o;
         this._origParent = PGB.utl.et(e);
         r = Math.floor(Math.random() * 255);
         g = Math.floor(Math.random() * 255);
         b = Math.floor(Math.random() * 255);
-        w = 200;
-        h = 200;
-        x = (e.clientX - this._origParent[0].offsetLeft) - (w / 2);
-        y = (e.clientY - this._origParent[0].offsetTop) - (h / 2);
+        w = (this._origParent.outerWidth() / 2);
+        h = (this._origParent.outerHeight() / 2);
+        o = this._origParent.offset();
+        x = (e.clientX - o.left) - (w / 2);
+        y = (e.clientY - o.top) - (h / 2);
         this.elem = $('<div><span></span></div>');
         this.elem.addClass('edt-box');
         this.elem.css({
@@ -29,7 +30,9 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             left : x
         });
         this.elem.draggable({
-            snap : true
+            snap : true,
+            containment : 'parent',
+            opacity : .9
         });
         this._origParent.append(this.elem);
         PGB.plg.Edt.registerElm(this);
@@ -44,7 +47,9 @@ PGB.plg.Edt.elmP.Box = Base.extend({
      * @return {Bool}
      */
     sel : function() {
-        this.elem.resizable();
+        this.elem.resizable({
+            containment : 'parent'
+        });
         this.elem.addClass('edt-box-active');
         return true;
     },
