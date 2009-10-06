@@ -78,13 +78,8 @@ PGB.plg.Edt.elmP.Box = Base.extend({
         var out;
         out = {};
         out.bgcolor = {
-            type: 'select',
+            type: 'colorpicker',
             value: 'BG Color',
-            values: {
-                'FF0000' : 'Red',
-                '00FF00' : 'Green',
-                '0000FF' : 'Blue'
-            },
             action: this.bgColor,
             instance: this
         };

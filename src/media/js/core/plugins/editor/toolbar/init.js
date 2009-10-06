@@ -4,6 +4,8 @@ PGB.include('core', 'helpers.form', 1);
 PGB.include('form', 'elements', 1);
 PGB.include('form.elements', 'button', 2);
 PGB.include('form.elements', 'select', 2);
+PGB.include('form.elements', 'colorpicker', 2);
+
 
 
 PGB.plg.Edt.Tbr = Base.extend({
