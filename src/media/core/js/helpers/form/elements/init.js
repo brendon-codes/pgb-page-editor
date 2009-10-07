@@ -10,5 +10,5 @@ PGB.plg.Form.type.Element = Base.extend({
     constructor : function(detCmp) {
         // nothing yet
     }
-
+    
 });

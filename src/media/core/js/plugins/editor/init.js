@@ -59,7 +59,9 @@ PGB.plg.Edt = Base.extend(null, {
         var _this;
         _this = this;
         PGB.doc.bind('mousedown', function(e){
-            if (!_this.onToolbar(e)) {
+            var t;
+            t = PGB.utl.et(e);
+            if (!_this.onToolbar(t) && !PGB.plg.Form.isSubWidget(t)) {
                 _this.deselectElmsEvent(e);
                 _this.remDetails();
             }
@@ -74,9 +76,8 @@ PGB.plg.Edt = Base.extend(null, {
      * @param {Object[Event]} e
      * @return {Bool}
      */
-    onToolbar : function(e) {
-        var i, _i, t, tbr;
-        t = PGB.utl.et(e);
+    onToolbar : function(t) {
+        var i, _i, tbr;
         for (i in this.tbrs) {
             tbr = this.tbrs[i].elem;
             if (PGB.utl.parent(t, tbr)) {
@@ -201,7 +202,7 @@ PGB.plg.Edt = Base.extend(null, {
      * @return {Bool}
      */
     _canDesel : function(t, i) {
-        if (t[0].pgbMap !== undefined && t[0] !== this.elms[i].elem[0]) {
+        if (t.data('pgb') !== undefined && t[0] !== this.elms[i].elem[0]) {
             return true;
         }
         if (!PGB.utl.parent(t, this.elms[i].elem)) {
@@ -244,9 +245,9 @@ PGB.plg.Edt = Base.extend(null, {
             i = PGB.utl.rand();
             //console.log(i);
             // Add reverse lookup
-            elmPInstance.elem[0].pgbMap = {
+            elmPInstance.elem.data('pgb', {
                 elmPInstance : elmPInstance
-            };
+            });
             elmPInstance.regID = i;
             this.elms[i] = elmPInstance;
             return i;
@@ -261,11 +262,13 @@ PGB.plg.Edt = Base.extend(null, {
      * 
      */
     findElm : function(elm) {
+        var d;
         elm = elm[0];
         while (elm !== undefined && elm !== null) {
-            if (elm.pgbMap !== undefined) {
-                if (elm.pgbMap.elmPInstance !== undefined) {
-                    return elm.pgbMap.elmPInstance;
+            d = $(elm).data('pgb');
+            if (d !== undefined) {
+                if (d.elmPInstance !== undefined) {
+                    return d.elmPInstance;
                 }
             }
             elm = elm.parentNode;

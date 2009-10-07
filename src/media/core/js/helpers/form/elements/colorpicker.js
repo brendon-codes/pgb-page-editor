@@ -13,7 +13,8 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
      * @param {Object} detCmp
      */
     constructor : function(detCmp) {
-        var i, lbl, opt, cp;
+        var i, lbl, opt, cp, _this;
+        _this = this;
         if (detCmp.values === undefined) {
             this.elem = null;
         }
@@ -30,23 +31,24 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
         }
         cp = $('<div>').text('FOO');
         cp.click(function() {
+            var f, cpb;
             PGB.plg.Edt.context.ColorPicker({
-                flat : true
+                flat : true,
+                onChange : function(hsb, hex, rgb) {
+                    //console.log(hsb, hex, rgb);
+                    detCmp.action.apply(detCmp.instance, [hex]);
+                    return false;
+                }
             });
+            f = PGB.plg.Edt.context.data('colorpickerId');
+            _this.cpBox = $(PGB.a('#{cpid}', {cpid:f}));
+            PGB.plg.Form.regSubWidget(_this.cpBox);
+            return true;
         });
-        //this._cp.ColorPicker({
-        //    onChange : function(hsb, hex, rgb) {
-        //        detCmp.action.apply(detCmp.instance, [rgb]);
-        //        return false;
-        //    },
-        //    onHide : function(elm) {
-        //        console.log(elm);
-        //    }
-        //});
         this.elem.append(cp);
         return;
     },
-
+    
     /**
      * Cleanup hook
      */

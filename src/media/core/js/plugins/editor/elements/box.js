@@ -126,10 +126,10 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             var i, _i, c;
             for (i = 0, _i = elm.childNodes.length; i < _i; i++) {
                 c = elm.childNodes[i];
-                if (c.pgbMap !== undefined &&
-                        c.pgbMap.elmPInstance !== undefined) {
-                    if ($.isFunction(c.pgbMap.elmPInstance.destroy)) {
-                        c.pgbMap.elmPInstance.destroy();
+                d = $(c).data('pgb');
+                if (d !== undefined && d.elmPInstance !== undefined) {
+                    if ($.isFunction(d.elmPInstance.destroy)) {
+                        d.elmPInstance.destroy();
                     }
                 }
                 arguments.callee(c);
