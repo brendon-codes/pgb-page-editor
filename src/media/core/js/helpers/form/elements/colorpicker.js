@@ -7,6 +7,12 @@
 PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
 
     /**
+     * Properties
+     * 
+     */
+    cpBox : null,
+
+    /**
      * Form type remove constructor
      * 
      * @constructor
@@ -15,21 +21,13 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
     constructor : function(detCmp) {
         var i, lbl, opt, cp, _this;
         _this = this;
-        if (detCmp.values === undefined) {
-            this.elem = null;
-        }
-        if ($.isFunction(detCmp.action)) {
-            this.elem = null;
-        }
-        if (detCmp.instance === undefined) {
-            detCmp.instance = window;
-        }
+        this.base(detCmp);
         this.elem = $('<div>');
         if (detCmp.value !== undefined) {
             lbl = $('<span>').text(detCmp.value);
             this.elem.append(lbl);
         }
-        cp = $('<div>').text('FOO');
+        cp = $('<div>').text('CHANGE');
         cp.click(function() {
             var f, cpb;
             PGB.plg.Edt.context.ColorPicker({
@@ -40,8 +38,8 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
                     return false;
                 }
             });
-            f = PGB.plg.Edt.context.data('colorpickerId');
-            _this.cpBox = $(PGB.a('#{cpid}', {cpid:f}));
+            cpid = PGB.plg.Edt.context.data('colorpickerId');
+            _this.cpBox = $(PGB.a('#{cpid}', {cpid:cpid}));
             PGB.plg.Form.regSubWidget(_this.cpBox);
             return true;
         });
@@ -53,12 +51,11 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
      * Cleanup hook
      */
     cleanup : function() {
-        var id, cpBox;
-        //id = this._cp.data('colorpickerId');
-        //cpBox = $('#' + id);
-        //cpBox[0].pgbMap = {
-        //    destroy : true
-        //};
+        //console.log(this.cpBox);
+        if (this.cpBox !== null && this.cpBox !== undefined) {
+            this.cpBox.remove();
+        }
+        PGB.plg.Edt.context.removeData('colorpickerId');
         return true;
     }
 

@@ -8,15 +8,7 @@ PGB.plg.Form.type.Button = PGB.plg.Form.type.Element.extend({
      * @param {Object} detCmp
      */
     constructor : function(detCmp) {
-        if (detCmp.value === undefined) {
-            this.elem = null;
-        }
-        if ($.isFunction(detCmp.action)) {
-            this.elem = null;
-        }
-        if (detCmp.instance === undefined) {
-            detCmp.instance = window;
-        }
+        this.base(detCmp);
         this.elem = $('<input type="button" />');
         this.elem.val(detCmp.value);
         this.elem.click(function(){
