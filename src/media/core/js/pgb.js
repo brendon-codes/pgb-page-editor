@@ -6,7 +6,7 @@ var PGB = Base.extend(null, {
      * 
      */
     hlp : {},
-    doc : {},
+    doc : null,
     plg : {},
     _modules : {},
     _corePath : null,
