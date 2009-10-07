@@ -1,9 +1,0 @@
-#pge-edt .edt-box
-{
-    border : 1px solid #F00;
-}
-
-#pge-edt .edt-box-active
-{
-    border : 2px dashed #0F0;
-}
