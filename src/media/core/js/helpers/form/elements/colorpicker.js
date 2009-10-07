@@ -29,18 +29,17 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
         }
         cp = $('<div>').text('CHANGE');
         cp.click(function() {
-            var f, cpb;
-            PGB.plg.Edt.context.ColorPicker({
+            var f, cpb, tbr;
+            tbr = new PGB.plg.Edt.Tbr('Color Picker');
+            tbr.tbrBodyCont.ColorPicker({
                 flat : true,
                 onChange : function(hsb, hex, rgb) {
-                    //console.log(hsb, hex, rgb);
                     detCmp.action.apply(detCmp.instance, [hex]);
                     return false;
                 }
             });
-            cpid = PGB.plg.Edt.context.data('colorpickerId');
+            cpid = tbr.tbrBodyCont.data('colorpickerId');
             _this.cpBox = $(PGB.a('#{cpid}', {cpid:cpid}));
-            PGB.plg.Form.regSubWidget(_this.cpBox);
             return true;
         });
         this.elem.append(cp);
@@ -51,11 +50,7 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
      * Cleanup hook
      */
     cleanup : function() {
-        //console.log(this.cpBox);
-        if (this.cpBox !== null && this.cpBox !== undefined) {
-            this.cpBox.remove();
-        }
-        PGB.plg.Edt.context.removeData('colorpickerId');
+        //PGB.plg.Edt.context.removeData('colorpickerId');
         return true;
     }
 

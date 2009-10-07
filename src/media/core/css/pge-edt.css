@@ -11,14 +11,26 @@
     font-family : sans-serif;
     min-height : 15em;
     z-index : 999999;
-}
-
-#pge-edt .edt-tbr
-{
     -moz-border-radius : 6px;
     -webkit-border-radius : 6px;
     -ms-border-radius : 6px; 
 }
+
+#pge-edt .edt-tbr-prim
+{
+    width : 10em;
+}
+
+#pge-edt .edt-tbr-det
+{
+    width : 10em;
+}
+
+#pge-edt .edt-tbr-widget
+{
+    width : 20em;
+}
+
 
 #pge-edt .edt-tbr h1
 {
@@ -30,12 +42,12 @@
     cursor : move;
 }
 
-#pge-edt .edt-tbr .edt-tbr-prim li
+#pge-edt .edt-tbr-prim li
 {
     background-color : #030;
 }
 
-#pge-edt .edt-tbr .edt-tbr-det li
+#pge-edt .edt-tbr-det li
 {
     background-color : #444;
 }
@@ -70,7 +82,3 @@
     position : relative;
 }
 
-#pge-edt .edt-tbr .edt-tbr-det
-{
-    position : absolute;
-}
