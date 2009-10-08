@@ -9,15 +9,7 @@ PGB.plg.Form.type.Select = PGB.plg.Form.type.Element.extend({
      */
     constructor : function(detCmp) {
         var i, lbl, elm, opt;
-        if (detCmp.values === undefined) {
-            this.elem = null;
-        }
-        if ($.isFunction(detCmp.action)) {
-            this.elem = null;
-        }
-        if (detCmp.instance === undefined) {
-            detCmp.instance = window;
-        }
+        this.base(detCmp);
         this.elem = $('<div>');
         if (detCmp.value !== undefined) {
             lbl = $('<span>').text(detCmp.value);

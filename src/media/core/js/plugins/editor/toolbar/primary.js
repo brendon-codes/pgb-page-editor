@@ -10,6 +10,7 @@ PGB.plg.Edt.TbrPrim = PGB.plg.Edt.Tbr.extend({
         var _this, tbrBody, t, tbrBtn, tbrBtnPrim;
         _this = this;
         this.base('Tools');
+        this.elem.addClass('edt-tbr-prim');
         this._activeBtn = null;
         this._buttons = {};
         tbrBody = $('<ul>');
@@ -17,14 +18,10 @@ PGB.plg.Edt.TbrPrim = PGB.plg.Edt.Tbr.extend({
             tbrBtn = new PGB.plg.Edt.Tbr.Btn(PGB.plg.Edt.cmp[t], this);
             this.regButton(tbrBtn);
             tbrBody.append(tbrBtn.elem);
-        }    
-        this._detailsBox = $('<div>');
-        this._detailsBox.addClass('edt-tbr-det');
+        }
         tbrBtnPrim = $('<div>');
-        tbrBtnPrim.addClass('edt-tbr-prim');
         tbrBtnPrim.append(tbrBody);
         this.tbrBodyCont.append(tbrBtnPrim);
-        this.tbrBodyCont.append(this._detailsBox);
         return;
     },
     

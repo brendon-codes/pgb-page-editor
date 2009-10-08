@@ -7,56 +7,50 @@
 PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
 
     /**
+     * Properties
+     * 
+     */
+    cpBox : null,
+
+    /**
      * Form type remove constructor
      * 
      * @constructor
      * @param {Object} detCmp
      */
     constructor : function(detCmp) {
-        var i, lbl, opt, cp;
-        if (detCmp.values === undefined) {
-            this.elem = null;
-        }
-        if ($.isFunction(detCmp.action)) {
-            this.elem = null;
-        }
-        if (detCmp.instance === undefined) {
-            detCmp.instance = window;
-        }
+        var i, lbl, opt, cp, _this;
+        _this = this;
+        this.base(detCmp);
         this.elem = $('<div>');
         if (detCmp.value !== undefined) {
             lbl = $('<span>').text(detCmp.value);
             this.elem.append(lbl);
         }
-        cp = $('<div>').text('FOO');
+        cp = $('<div>').text('CHANGE');
         cp.click(function() {
-            PGB.plg.Edt.context.ColorPicker({
-                flat : true
+            var f, cpb, tbr;
+            tbr = new PGB.plg.Edt.Tbr('Color Picker');
+            tbr.tbrBodyCont.ColorPicker({
+                flat : true,
+                onChange : function(hsb, hex, rgb) {
+                    detCmp.action.apply(detCmp.instance, [hex]);
+                    return false;
+                }
             });
+            cpid = tbr.tbrBodyCont.data('colorpickerId');
+            _this.cpBox = $(PGB.a('#{cpid}', {cpid:cpid}));
+            return true;
         });
-        //this._cp.ColorPicker({
-        //    onChange : function(hsb, hex, rgb) {
-        //        detCmp.action.apply(detCmp.instance, [rgb]);
-        //        return false;
-        //    },
-        //    onHide : function(elm) {
-        //        console.log(elm);
-        //    }
-        //});
         this.elem.append(cp);
         return;
     },
-
+    
     /**
      * Cleanup hook
      */
     cleanup : function() {
-        var id, cpBox;
-        //id = this._cp.data('colorpickerId');
-        //cpBox = $('#' + id);
-        //cpBox[0].pgbMap = {
-        //    destroy : true
-        //};
+        //PGB.plg.Edt.context.removeData('colorpickerId');
         return true;
     }
 
