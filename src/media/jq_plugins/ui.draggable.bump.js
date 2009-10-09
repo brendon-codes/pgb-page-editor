@@ -15,44 +15,64 @@ $.ui.plugin.add("draggable", "bump", {
      * 
      */
     drag: function(event, ui) {
-        var group, i, elm, src, dst, c1, c2, c3, c4, elmBump;
+        var group, i, elm, src, dst, c, pos, elmBump, d;
         group = this.data('bump').group;
         src = {};
         dst = {};
-        src.Width = ui._dragInst.helperProportions.width;
-        src.Height = ui._dragInst.helperProportions.height;
-        src.Offset = ui._dragInst.positionAbs;
+        pos = {};
+        c = [];
+        d = this.data('draggable');
+        src.Width = d.helperProportions.width;
+        src.Height = d.helperProportions.height;
+        src.Offset = this.offset();
         src.Left = src.Offset.left;
-        src.Right = src.Offset.left + src.Width;
         src.Top = src.Offset.top;
+        src.Right = src.Offset.left + src.Width;
         src.Btm = src.Offset.top + src.Height;
+        pos.Offset = d.positionAbs;
+        pos.Left = pos.Offset.left;
+        pos.Right = pos.Offset.left + src.Width;
+        pos.Top = pos.Offset.top;
+        pos.Btm = pos.Offset.top + src.Height;
         for (i in $.ui.draggable._bumpElms) {
             elm = $.ui.draggable._bumpElms[i];
             // Is not same element
-            if (elm[0] !== this[0]) {
-                elmBump = elm.data('bump');
-                // Is part of same bump group
-                if (elmBump !== undefined &&
-                        group === elmBump.group) {
-                    dst.Width = elm.outerWidth();
-                    dst.Height = elm.outerHeight();
-                    dst.Offset = elm.offset();
-                    dst.Left = dst.Offset.left;
-                    dst.Right = dst.Offset.left + dst.Width;
-                    dst.Top = dst.Offset.top;
-                    dst.Btm = dst.Offset.top + dst.Height;
-                    // Criterias  
-                    c1 = (src.Left >= dst.Left && src.Left <= dst.Right);
-                    c2 = (src.Right >= dst.Left && src.Right <= dst.Right);
-                    c3 = (src.Top >= dst.Top && src.Top <= dst.Btm);
-                    c4 = (src.Btm >= dst.Top && src.Btm <= dst.Btm);
-                    //console.log(src, dst);
-                    // Test
-                    if ((c1 || c2) && (c3 || c4)) {
-                        ui._dragInst._shouldCancelDrag = true;
-                        return;
-                    }
+            if (elm[0] === this[0]) {
+                continue;
+            }
+            elmBump = elm.data('bump');
+            if (elmBump === undefined || group !== elmBump.group) {
+                continue;
+            }
+            dst.Width = elm.outerWidth();
+            dst.Height = elm.outerHeight();
+            dst.Offset = elm.offset();
+            dst.Left = dst.Offset.left;
+            dst.Right = dst.Offset.left + dst.Width;
+            dst.Top = dst.Offset.top;
+            dst.Btm = dst.Offset.top + dst.Height;
+            // Criterias  
+            c[0] = (pos.Left >= dst.Left && pos.Left <= dst.Right);
+            c[1] = (pos.Right >= dst.Left && pos.Right <= dst.Right);
+            c[2] = (pos.Left <= dst.Left && pos.Right >= dst.Right);
+            c[3] = (pos.Top >= dst.Top && pos.Top <= dst.Btm);
+            c[4] = (pos.Btm >= dst.Top && pos.Btm <= dst.Btm);
+            // Test
+            if ((c[0] || c[1] || c[2]) && (c[3] || c[4])) {
+                // Snap criteria
+                if (src.Top > (dst.Btm - (dst.Height / 2))) {
+                    ui.position.top -= (pos.Top - dst.Btm);
                 }
+                else if (src.Btm < (dst.Top + (dst.Height / 2))) {
+                    ui.position.top -= (pos.Btm - dst.Top);
+                }
+                if (src.Left > (dst.Right - (dst.Width / 2))) {
+                    ui.position.left -= (pos.Left - dst.Right);
+                }
+                else if (src.Right < (dst.Left + (dst.Width / 2))) {
+                    ui.position.left -= (pos.Right - dst.Left);
+                }
+                return;
             }
         }
     }
@@ -82,28 +102,4 @@ $.ui.draggable.prototype.destroy = function() {
         }
     }
     return $.ui.draggable.prototype.destroy_orig.apply(this, arguments);
-};
-
-$.ui.draggable.prototype._mouseDrag = function(event, noPropagation) {
-    //Compute the helpers position
-    this.position = this._generatePosition(event);
-    this.positionAbs = this._convertPositionTo("absolute");
-    this._shouldCancelDrag = false;
-    //Call plugins and callbacks and use the resulting position if
-    // something is returned
-    if (!noPropagation) {
-        var ui = this._uiHash();
-        ui._dragInst = this;
-        this._trigger('drag', event, ui);
-        this.position = ui.position;
-    }
-    if (!this._shouldCancelDrag) {
-        if (!this.options.axis || this.options.axis != "y") 
-            this.helper[0].style.left = this.position.left + 'px';
-        if (!this.options.axis || this.options.axis != "x") 
-            this.helper[0].style.top = this.position.top + 'px';
-        if ($.ui.ddmanager) 
-            $.ui.ddmanager.drag(this, event);
-    }
-    return false;
 };
