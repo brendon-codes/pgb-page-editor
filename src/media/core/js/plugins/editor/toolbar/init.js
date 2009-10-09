@@ -30,9 +30,10 @@ PGB.plg.Edt.Tbr = Base.extend({
         PGB.plg.Edt.context.append(this.elem);
         this.elem.draggable({
             cursor : 'move',
-            snap : true,
+            snap : false,
             containment : PGB.plg.Edt.context,
-            handle : this.tbrHead
+            handle : this.tbrHead,
+            bump : 'pgb_tbr'
         });
         this.elem.mousedown(function() {
            return false; 
