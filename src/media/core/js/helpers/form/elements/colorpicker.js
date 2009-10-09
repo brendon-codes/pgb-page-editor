@@ -30,16 +30,16 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
         cp = $('<div>').text('CHANGE');
         cp.click(function() {
             var f, cpb, tbr;
-            tbr = new PGB.plg.Edt.Tbr('Color Picker');
-            tbr.tbrBodyCont.ColorPicker({
+            _this.cpBox = $('<div>');
+            _this.cpBox.ColorPicker({
                 flat : true,
                 onChange : function(hsb, hex, rgb) {
                     detCmp.action.apply(detCmp.instance, [hex]);
                     return false;
                 }
             });
-            cpid = tbr.tbrBodyCont.data('colorpickerId');
-            _this.cpBox = $(PGB.a('#{cpid}', {cpid:cpid}));
+            tbr = new PGB.plg.Edt.TbrWidget('Color Picker', _this.cpBox, 360);
+            tbr.registerCleanup(_this.cpCleanup, _this);
             return true;
         });
         this.elem.append(cp);
@@ -49,8 +49,8 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
     /**
      * Cleanup hook
      */
-    cleanup : function() {
-        //PGB.plg.Edt.context.removeData('colorpickerId');
+    cpCleanup : function() {
+        this.cpBox.removeData('colorpickerId');
         return true;
     }
 

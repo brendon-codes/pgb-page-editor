@@ -123,7 +123,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
         PGB.plg.Edt.remDetails();
         // Recusively remove child elements
         (function(elm){
-            var i, _i, c;
+            var i, _i, c, d;
             for (i = 0, _i = elm.childNodes.length; i < _i; i++) {
                 c = elm.childNodes[i];
                 d = $(c).data('pgb');

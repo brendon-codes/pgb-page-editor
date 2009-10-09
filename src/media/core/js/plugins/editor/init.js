@@ -2,6 +2,7 @@ PGB.include('core', 'helpers.util', 1);
 PGB.include('editor', 'toolbar', 1);
 PGB.include('editor', 'toolbar.primary', 2);
 PGB.include('editor', 'toolbar.details', 2);
+PGB.include('editor', 'toolbar.widget', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);
 
@@ -61,7 +62,7 @@ PGB.plg.Edt = Base.extend(null, {
         PGB.doc.bind('mousedown', function(e){
             var t;
             t = PGB.utl.et(e);
-            if (!_this.onToolbar(t) && !PGB.plg.Form.isSubWidget(t)) {
+            if (!_this.onToolbar(t)) {
                 _this.deselectElmsEvent(e);
                 _this.remDetails();
             }
@@ -114,7 +115,8 @@ PGB.plg.Edt = Base.extend(null, {
     remDetails : function() {
         var i, _i;
         for (i in this.tbrs) {
-            if (this.tbrs[i] instanceof PGB.plg.Edt.TbrDet &&
+            if ((this.tbrs[i] instanceof PGB.plg.Edt.TbrDet || 
+                    this.tbrs[i] instanceof PGB.plg.Edt.TbrWidget) &&
                     $.isFunction(this.tbrs[i].destroy)) {
                 this.tbrs[i].destroy();
             }

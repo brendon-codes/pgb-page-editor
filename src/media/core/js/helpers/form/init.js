@@ -56,34 +56,7 @@ PGB.plg.Form = Base.extend({
     /**
      * Used for elements
      */
-    type : {},
-    _subWidgets : {},
-
-    /**
-     * Registers an element subwidget
-     * 
-     */
-    regSubWidget : function(elm) {
-        var i;
-        i = PGB.utl.rand();
-        this._subWidgets[i] = elm;
-        return true;
-    },
-    
-    /**
-     * Checks if is a subWidget
-     * 
-     */
-    isSubWidget : function(elm) {
-        var i, s;
-        for (i in this._subWidgets) {
-            s = this._subWidgets[i];
-            if (PGB.utl.parent(elm, s)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    type : {}
     
 });
 

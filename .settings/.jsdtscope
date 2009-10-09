@@ -8,5 +8,5 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary"/>
 	<classpathentry kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.FireFoxBrowserLibrary"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.wst.jsdt.launching.FireFoxBrowserLibrary"/>
 </classpath>
