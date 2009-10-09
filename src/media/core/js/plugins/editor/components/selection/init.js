@@ -57,9 +57,12 @@ PGB.plg.Edt.cmp.Select = Base.extend({
         t = PGB.utl.et(e);
         elmPInstance = PGB.plg.Edt.findElm(t);
         if (elmPInstance !== false) {
-            this.action(elmPInstance);
+            if (!PGB.plg.Edt.onActiveElm(elmPInstance)) {
+                this.action(elmPInstance);
+                return true;
+            }
         }
-        return true;
+        return false;
     },
     
     /**
@@ -72,6 +75,8 @@ PGB.plg.Edt.cmp.Select = Base.extend({
      */
     action : function(elmPInstance) {
         var det, tbrDet;
+        // Register active element with editor
+        PGB.plg.Edt.regActiveElm(elmPInstance);
         // selection action
         if ($.isFunction(elmPInstance.sel)) {
             elmPInstance.sel();

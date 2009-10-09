@@ -17,6 +17,7 @@ PGB.plg.Edt = Base.extend(null, {
     tbrs : {},
     cmp : {},
     elmP : {},
+    _activeElm : null,
     ERR : {
         ELM_NO_ELEM : [
             0, 'ELM_NO_ELEM',
@@ -60,15 +61,60 @@ PGB.plg.Edt = Base.extend(null, {
         var _this;
         _this = this;
         PGB.doc.bind('mousedown', function(e){
-            var t;
+            var t, a;
             t = PGB.utl.et(e);
-            if (!_this.onToolbar(t)) {
+            a = _this.findElm(t);
+            // If not on a toolbar and not on the active element
+            if (!_this.onToolbar(t) &&
+                    (a === false || !_this.onActiveElm(a))) {
+                _this.regActiveElm(null);
                 _this.deselectElmsEvent(e);
                 _this.remDetails();
             }
             return true;
         });
         return true;    
+    },
+
+    /**
+     * Register the active element
+     * 
+     * 
+     */
+    regActiveElm : function(elmPInstance) {
+        this._activeElm = elmPInstance;
+        return true;
+    },
+
+    /**
+     * Checks if is on active element
+     * 
+     */
+    onActiveElm : function(elmPInstance) {
+        return (this._activeElm !== null &&
+            elmPInstance.elem[0] === this._activeElm.elem[0]);
+    },
+    
+    /**
+     * Finds an elm
+     * 
+     * @param {Object[jQuery]} elm
+     * @return {Object[PGB.plg.Edt.elmP.Box]}
+     * 
+     */
+    findElm : function(elm) {
+        var d;
+        elm = elm[0];
+        while (elm !== undefined && elm !== null) {
+            d = $(elm).data('pgb');
+            if (d !== undefined) {
+                if (d.elmPInstance !== undefined) {
+                    return d.elmPInstance;
+                }
+            }
+            elm = elm.parentNode;
+        }
+        return false;
     },
     
     /**
@@ -254,28 +300,6 @@ PGB.plg.Edt = Base.extend(null, {
             this.elms[i] = elmPInstance;
             return i;
         }
-    },
-    
-    /**
-     * Finds an elm
-     * 
-     * @param {Object[jQuery]} elm
-     * @return {Object[PGB.plg.Edt.elmP.Box]}
-     * 
-     */
-    findElm : function(elm) {
-        var d;
-        elm = elm[0];
-        while (elm !== undefined && elm !== null) {
-            d = $(elm).data('pgb');
-            if (d !== undefined) {
-                if (d.elmPInstance !== undefined) {
-                    return d.elmPInstance;
-                }
-            }
-            elm = elm.parentNode;
-        }
-        return false;
     }
     
 });
