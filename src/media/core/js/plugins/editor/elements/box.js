@@ -74,7 +74,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
      * @method details
      * @return {Object}
      */
-    details : function() {
+    availProps : function() {
         var out;
         out = {};
         out.bgcolor = {
@@ -83,6 +83,17 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             action: this.bgColor,
             instance: this
         };
+        return out;
+    },
+
+    /**
+     * Available properties for the details toolbar
+     * 
+     * 
+     */
+    availActions : function() {
+        var out;
+        out = {};
         out.remove = {
             type: 'button',
             value: 'Remove',
@@ -97,7 +108,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
             instance : this
         };
         */
-        return out;
+        return out;        
     },
 
     /**

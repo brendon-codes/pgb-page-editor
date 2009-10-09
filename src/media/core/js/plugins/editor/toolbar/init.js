@@ -1,7 +1,7 @@
 PGB.include('toolbar', 'button', 2);
-PGB.include('toolbar', 'details', 2);
+PGB.include('toolbar', 'form', 2);
 PGB.include('core', 'helpers.form', 1);
-PGB.include('form', 'elements', 1);
+PGB.include('helpers.form', 'elements', 1);
 PGB.include('form.elements', 'button', 2);
 PGB.include('form.elements', 'select', 2);
 PGB.include('form.elements', 'colorpicker', 2);

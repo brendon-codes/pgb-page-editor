@@ -74,32 +74,24 @@ PGB.plg.Edt.cmp.Select = Base.extend({
      * @return {Bool}
      */
     action : function(elmPInstance) {
-        var det, tbrDet;
+        var availProps, availActions, tbrDet;
         // Register active element with editor
         PGB.plg.Edt.regActiveElm(elmPInstance);
         // selection action
         if ($.isFunction(elmPInstance.sel)) {
             elmPInstance.sel();
         }
-        // details action
-        if ($.isFunction(elmPInstance.details)) {
-            det = this.detailsDef(elmPInstance);
-            det = $.extend(det, elmPInstance.details());
-            tbrDet = new PGB.plg.Edt.TbrDet(det);
+        // available properties
+        if ($.isFunction(elmPInstance.availProps)) {
+            availProps = elmPInstance.availProps();
+            new PGB.plg.Edt.TbrForm('Properties', availProps);
+        }
+        // available actions
+        if ($.isFunction(elmPInstance.availActions)) {
+            availActions = elmPInstance.availActions();
+            new PGB.plg.Edt.TbrForm('Actions', availActions);
         }
         return true;
-    },
-    
-    /**
-     * Gets default details items for an elmP
-     * 
-     * @param {Object} elmPInstance
-     * @reutn {Object}
-     */
-    detailsDef : function(elmPInstance){
-        var out;
-        out = {};
-        return out;
     }
 
 });

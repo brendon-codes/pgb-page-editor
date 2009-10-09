@@ -1,7 +1,7 @@
 PGB.include('core', 'helpers.util', 1);
 PGB.include('editor', 'toolbar', 1);
 PGB.include('editor', 'toolbar.primary', 2);
-PGB.include('editor', 'toolbar.details', 2);
+PGB.include('editor', 'toolbar.form', 2);
 PGB.include('editor', 'toolbar.widget', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);
@@ -161,8 +161,7 @@ PGB.plg.Edt = Base.extend(null, {
     remDetails : function() {
         var i, _i;
         for (i in this.tbrs) {
-            if ((this.tbrs[i] instanceof PGB.plg.Edt.TbrDet || 
-                    this.tbrs[i] instanceof PGB.plg.Edt.TbrWidget) &&
+            if (!(this.tbrs[i] instanceof PGB.plg.Edt.TbrPrim) &&
                     $.isFunction(this.tbrs[i].destroy)) {
                 this.tbrs[i].destroy();
             }

@@ -1,4 +1,4 @@
-PGB.plg.Edt.TbrDet = PGB.plg.Edt.Tbr.extend({
+PGB.plg.Edt.TbrForm = PGB.plg.Edt.Tbr.extend({
 
     /**
      * Setup the toolbar
@@ -6,10 +6,10 @@ PGB.plg.Edt.TbrDet = PGB.plg.Edt.Tbr.extend({
      * @param {Object[HTMLElement]} context
      * @constructor
      */
-    constructor : function(det) {
+    constructor : function(name, det) {
         var _this, detForm;
         _this = this;
-        this.base('Details');
+        this.base(name);
         this.detForm = new PGB.plg.Form(det);
         this.tbrBodyCont.html(this.detForm.elem);
         return;
