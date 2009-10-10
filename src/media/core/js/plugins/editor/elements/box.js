@@ -80,6 +80,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
         out.bgcolor = {
             type: 'colorpicker',
             value: 'BG Color',
+            defaultValue : this.elem.css('background-color'),
             action: this.bgColor,
             instance: this
         };
@@ -118,7 +119,7 @@ PGB.plg.Edt.elmP.Box = Base.extend({
      */
     bgColor : function(val) {
         this.elem.css({
-            backgroundColor : PGB.a('#{val}', {val:val})
+            backgroundColor : val
         });
     },
     
