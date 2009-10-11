@@ -4,7 +4,7 @@
  * @see http://www.eyecon.ro/colorpicker/
  */
 
-PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
+PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.WidgetElement.extend({
 
     /**
      * Properties
@@ -35,10 +35,10 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
             bgColor = 'RGB(255,0,0)';
         }
         cp.css({backgroundColor : bgColor});
-        cp.click(function() {
+        this.regWidgetClick(cp, 'Color Picker', 360, function() {
             var f, cpb, tbr;
-            _this.cpBox = $('<div>');
-            _this.cpBox.ColorPicker({
+            this.cpBox = $('<div>');
+            this.cpBox.ColorPicker({
                 flat : true,
                 onChange : function(hsb, hex, rgb) {
                     hex = '#' + hex;
@@ -46,12 +46,10 @@ PGB.plg.Form.type.Colorpicker = PGB.plg.Form.type.Element.extend({
                     cp.css({backgroundColor : hex});
                     return false;
                 },
-                color : PGB.utl.rgb(bgColor)
+                color : PGB.utl.rgb(cp.css('background-color'))
             });
-            tbr = new PGB.plg.Edt.TbrWidget('Color Picker', _this.cpBox, 360);
-            tbr.registerCleanup(_this.cpCleanup, _this);
-            return true;
-        });
+            return this.cpBox;
+        }, this.cpCleanup);
         this.elem.append(cp);
         return;
     },

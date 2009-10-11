@@ -15,6 +15,7 @@ PGB.plg.Edt = Base.extend(null, {
      */
     elms : {},
     tbrs : {},
+    _tbrCoords : {},
     cmp : {},
     elmP : {},
     _activeElm : null,
@@ -93,6 +94,28 @@ PGB.plg.Edt = Base.extend(null, {
     onActiveElm : function(elmPInstance) {
         return (this._activeElm !== null &&
             elmPInstance.elem[0] === this._activeElm.elem[0]);
+    },
+
+    /**
+     * Registers a toolbars last coordinates
+     */
+    setTbrCoords : function(code, top, left) {
+        this._tbrCoords[code] = {top:top, left:left};
+        return true;
+    },
+
+    /**
+     * Gets toolbar coords
+     * 
+     * @param {Object} code
+     */
+    getTbrCoords : function(code) {
+        if (this._tbrCoords[code] !== undefined) {
+            return this._tbrCoords[code];
+        }
+        else {
+            return false;
+        }
     },
     
     /**
