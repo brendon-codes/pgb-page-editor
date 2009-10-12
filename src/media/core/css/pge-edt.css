@@ -13,7 +13,8 @@
     z-index : 999999;
     -moz-border-radius : 6px;
     -webkit-border-radius : 6px;
-    -ms-border-radius : 6px; 
+    -ms-border-radius : 6px;
+    position : absolute;
 }
 
 #pge-edt .edt-tbr-prim

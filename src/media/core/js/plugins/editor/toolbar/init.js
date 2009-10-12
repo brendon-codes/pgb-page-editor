@@ -18,7 +18,7 @@ PGB.plg.Edt.Tbr = Base.extend({
      * @constructor
      */
     constructor : function(headText) {
-        var _this, code, coords, p;
+        var _this, code;
         _this = this;
         this.tbrHead = $('<h1>');
         this.tbrHead.text(headText);
@@ -35,6 +35,7 @@ PGB.plg.Edt.Tbr = Base.extend({
             snap : false,
             containment : PGB.plg.Edt.context,
             handle : this.tbrHead,
+            // See custom plugin 'jq_plugins/ui.draggable.bump.js'
             bump : 'pgb_tbr',
             stop : function(event, ui) {
                 PGB.plg.Edt.setTbrCoords(code,
@@ -42,18 +43,7 @@ PGB.plg.Edt.Tbr = Base.extend({
                 return true;
             }
         });
-        // Not-first time this tbr has shown
-        if (coords = PGB.plg.Edt.getTbrCoords(code)) {
-            this.elem.css({
-                top : PGB.a('{y}px', {y:coords.top}),
-                left : PGB.a('{x}px', {x:coords.left})
-            });
-        }
-        // First time this tbr has shown
-        else {
-            p = this.elem.position();
-            PGB.plg.Edt.setTbrCoords(code, p.top, p.left);
-        }
+        this.createPosition(code);
         this.elem.mousedown(function() {
            return false; 
         });
@@ -62,50 +52,196 @@ PGB.plg.Edt.Tbr = Base.extend({
     },
 
     /**
+     * create position
+     */
+    createPosition : function(code) {
+        var coords, resetTbrPos, p;
+        // Not-first time this tbr has shown
+        if (coords = PGB.plg.Edt.getTbrCoords(code)) {
+            // no new toolbars exist in this place
+            if (this.findPosFromXY(coords.left, coords.top) !== false) {
+                this.setPosition(coords.left, coords.top);
+                resetTbrPos = false;
+            }
+            else {
+                resetTbrPos = true;                
+            }
+        }
+        // First time this tbr has shown
+        else {
+            resetTbrPos = true;
+        }
+        if (resetTbrPos) {
+            // See if we can find position
+            p = this.getPosition();
+            if (p !== false) {
+                this.setPosition(p.left, p.top);
+            }
+            // Go with default position
+            else {
+                p = this.elem.position();
+            }
+            PGB.plg.Edt.setTbrCoords(code, p.top, p.left);
+        }
+        return true;
+    },
+
+    /**
      * Sets position of new toolbar
      * 
      * 
      */
-    setPosition : function() {
-        var i, elm, elmBump, group;
-        group = this.data('bump').group;
+    getPosition : function() {
+        var j, k, i, elm, elmBump, group, w, h, cntX, cntY, props, p,
+            xVal, yVal, found, ret;
+        group = this.elem.data('bump').group;
+        w = this.elem.outerWidth();
+        h = this.elem.outerHeight();
+        cntX = Math.floor((window.innerWidth / w) / 2);
+        cntY = Math.floor(window.innerHeight / h);
+        // left/right
+        for (p = 0; p <= 1; p++) {
+            // x-axis
+            for (j = 0; j < cntX; j++) {
+                // Magic secret sauce
+                if (p === 0) {
+                    xVal = (w * j);
+                }
+                else {
+                    xVal = window.innerWidth - (w * (j + 1));
+                }
+                // y-axis
+                for (k = 0; k < cntY; k++) {
+                    yVal = (h * k);
+                    ret = this._findPosFromXY(w, h, xVal, yVal);
+                    if (ret !== false) {
+                        return ret;
+                    }
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Find pos from XY
+     * 
+     */
+    findPosFromXY : function(xVal, yVal) {
+        var w, h;
+        w = this.elem.outerWidth();
+        h = this.elem.outerHeight();
+        return this._findPosFromXY(w, h, xVal, yVal);
+    },
+
+    /**
+     * Find pos from XY
+     * 
+     * @param {Object} w
+     * @param {Object} h
+     * @param {Object} xVal
+     * @param {Object} yVal
+     */
+    _findPosFromXY : function(w, h, xVal, yVal) {
+        var found, i;
+        // Search all toolbars
+        found = false;
         for (i in PGB.plg.Edt.tbrs) {
-            elm = PGB.plg.Edt.tbrs[i];
-            elmBump = elm.data('bump');
-            if (elmBump === undefined || group !== elmBump.group) {
-                continue;
+            if (this.findTbrPosition(
+                    PGB.plg.Edt.tbrs[i], w, h,
+                    xVal, yVal)) {
+                found = true;
+                break;
             }
-            dst.Width = elm.outerWidth();
-            dst.Height = elm.outerHeight();
-            dst.Offset = elm.offset();
-            dst.Left = dst.Offset.left;
-            dst.Right = dst.Offset.left + dst.Width;
-            dst.Top = dst.Offset.top;
-            dst.Btm = dst.Offset.top + dst.Height;
-            // Criterias  
-            c[0] = (pos.Left >= dst.Left && pos.Left <= dst.Right);
-            c[1] = (pos.Right >= dst.Left && pos.Right <= dst.Right);
-            c[2] = (pos.Left <= dst.Left && pos.Right >= dst.Right);
-            c[3] = (pos.Top >= dst.Top && pos.Top <= dst.Btm);
-            c[4] = (pos.Btm >= dst.Top && pos.Btm <= dst.Btm);
-            // Test
-            if ((c[0] || c[1] || c[2]) && (c[3] || c[4])) {
-                // Snap criteria
-                if (src.Top > (dst.Btm - (dst.Height / 2))) {
-                    ui.position.top -= (pos.Top - dst.Btm);
-                }
-                else if (src.Btm < (dst.Top + (dst.Height / 2))) {
-                    ui.position.top -= (pos.Btm - dst.Top);
-                }
-                if (src.Left > (dst.Right - (dst.Width / 2))) {
-                    ui.position.left -= (pos.Left - dst.Right);
-                }
-                else if (src.Right < (dst.Left + (dst.Width / 2))) {
-                    ui.position.left -= (pos.Right - dst.Left);
-                }
-                return;
-            }
-        }  
+        }
+        // No toolbars found in this region
+        if (!found) {
+            return {
+                left : xVal,
+                top : yVal
+            };
+        }
+        else {
+            return false;
+        }
+    },
+
+    /**
+     * Sets position
+     * 
+     */
+    setPosition : function(x, y) {
+        //console.log(this, x, y);
+        this.elem.css({
+            top : PGB.a('{y}px', {y:y}),
+            left : PGB.a('{x}px', {x:x})
+        });
+        return true;
+    },
+
+    /**
+     * Helper to set position for toolbar
+     * 
+     * @param {Object} tbr
+     * @param {Object} w
+     * @param {Object} h
+     * @param {Object} x
+     * @param {Object} y
+     */
+    findTbrPosition : function(tbr, w, h, x, y) {
+        var tbrBump, c, group;
+        c = tbr.elem.data('pgb_coords');
+        group = this.elem.data('bump').group;
+        if (c === undefined) {
+            c = {
+                w : tbr.elem.outerWidth(),
+                h : tbr.elem.outerHeight(),
+                o : tbr.elem.offset()                
+            };
+            tbr.elem.data('pgb_coords', c);
+        }
+        tbrBump = tbr.elem.data('bump');
+        if (tbrBump === undefined || group !== tbrBump.group) {
+            return false;
+        }
+        return this._findTbrPosition(w, h, x, y, c);
+    },
+    
+    /**
+     * Helper to find tbr position
+     * 
+     */
+    _findTbrPosition : function(w, h, x, y, c) {
+        var dst, pos, t;
+        t = [];
+        //console.log(arguments, this);
+        dst = {};
+        dst.Width = c.w;
+        dst.Height = c.h;
+        dst.Left = c.o.left;
+        dst.Right = c.o.left + dst.Width;
+        dst.Top = c.o.top;
+        dst.Btm = c.o.top + dst.Height;
+        pos = {};
+        pos.Width = w;
+        pos.Height = h;
+        pos.Left = x + 1;
+        pos.Right = pos.Left + pos.Width;
+        pos.Top = y + 1;
+        pos.Btm = pos.Top + pos.Height;
+        // Criterias  
+        t[0] = (pos.Left >= dst.Left && pos.Left <= dst.Right);
+        t[1] = (pos.Right >= dst.Left && pos.Right <= dst.Right);
+        t[2] = (pos.Left <= dst.Left && pos.Right >= dst.Right);
+        t[3] = (pos.Top >= dst.Top && pos.Top <= dst.Btm);
+        t[4] = (pos.Btm >= dst.Top && pos.Btm <= dst.Btm);
+        // Test
+        if ((t[0] || t[1] || t[2]) && (t[3] || t[4])) {
+            return true;
+        }
+        else {
+            return false;
+        }
     },
 
     /**
