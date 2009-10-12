@@ -18,7 +18,7 @@ PGB.plg.Edt.Tbr = Base.extend({
      * @constructor
      */
     constructor : function(headText) {
-        var _this, code, coords;
+        var _this, code, coords, p;
         _this = this;
         this.tbrHead = $('<h1>');
         this.tbrHead.text(headText);
@@ -42,17 +42,70 @@ PGB.plg.Edt.Tbr = Base.extend({
                 return true;
             }
         });
+        // Not-first time this tbr has shown
         if (coords = PGB.plg.Edt.getTbrCoords(code)) {
             this.elem.css({
                 top : PGB.a('{y}px', {y:coords.top}),
                 left : PGB.a('{x}px', {x:coords.left})
             });
         }
+        // First time this tbr has shown
+        else {
+            p = this.elem.position();
+            PGB.plg.Edt.setTbrCoords(code, p.top, p.left);
+        }
         this.elem.mousedown(function() {
            return false; 
         });
         PGB.plg.Edt.regTbr(this);
         return;
+    },
+
+    /**
+     * Sets position of new toolbar
+     * 
+     * 
+     */
+    setPosition : function() {
+        var i, elm, elmBump, group;
+        group = this.data('bump').group;
+        for (i in PGB.plg.Edt.tbrs) {
+            elm = PGB.plg.Edt.tbrs[i];
+            elmBump = elm.data('bump');
+            if (elmBump === undefined || group !== elmBump.group) {
+                continue;
+            }
+            dst.Width = elm.outerWidth();
+            dst.Height = elm.outerHeight();
+            dst.Offset = elm.offset();
+            dst.Left = dst.Offset.left;
+            dst.Right = dst.Offset.left + dst.Width;
+            dst.Top = dst.Offset.top;
+            dst.Btm = dst.Offset.top + dst.Height;
+            // Criterias  
+            c[0] = (pos.Left >= dst.Left && pos.Left <= dst.Right);
+            c[1] = (pos.Right >= dst.Left && pos.Right <= dst.Right);
+            c[2] = (pos.Left <= dst.Left && pos.Right >= dst.Right);
+            c[3] = (pos.Top >= dst.Top && pos.Top <= dst.Btm);
+            c[4] = (pos.Btm >= dst.Top && pos.Btm <= dst.Btm);
+            // Test
+            if ((c[0] || c[1] || c[2]) && (c[3] || c[4])) {
+                // Snap criteria
+                if (src.Top > (dst.Btm - (dst.Height / 2))) {
+                    ui.position.top -= (pos.Top - dst.Btm);
+                }
+                else if (src.Btm < (dst.Top + (dst.Height / 2))) {
+                    ui.position.top -= (pos.Btm - dst.Top);
+                }
+                if (src.Left > (dst.Right - (dst.Width / 2))) {
+                    ui.position.left -= (pos.Left - dst.Right);
+                }
+                else if (src.Right < (dst.Left + (dst.Width / 2))) {
+                    ui.position.left -= (pos.Right - dst.Left);
+                }
+                return;
+            }
+        }  
     },
 
     /**
