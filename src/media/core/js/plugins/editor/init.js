@@ -156,6 +156,30 @@ PGB.plg.Edt = Base.extend(null, {
         }
         return false;    
     },
+
+    /**
+     * Gets smallest toolbar
+     * 
+     */
+    getSmallestTbr : function() {
+        var i, sm, w, h, nw, nh;
+        w = 0;
+        h = 0;
+        sm = null;
+        for (i in this.tbrs) {
+            if (sm === null) {
+                sm = this.tbrs[i];
+            }
+            nw = this.tbrs[i].elem.outerWidth();
+            nh = this.tbrs[i].elem.outerHeight();
+            if ((w === 0 || h === 0) || ([nw,nh] <= [w,h])) {
+                w = nw;
+                h = nh;
+                sm = this.tbrs[i];
+            }
+        }
+        return sm;
+    },
     
     /**
      * Checks if event occurred on elm (drawn elm)

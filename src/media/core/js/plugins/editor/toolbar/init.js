@@ -122,26 +122,35 @@ PGB.plg.Edt.Tbr = Base.extend({
      */
     getPosition : function() {
         var j, k, i, elm, elmBump, group, w, h, cntX, cntY, props, p,
-            xVal, yVal, found, ret;
+            xVal, yVal, found, ret, smallest, smallestW, smallestH;
         group = this.elem.data('bump').group;
         w = this.elem.outerWidth();
         h = this.elem.outerHeight();
         cntX = Math.floor((window.innerWidth / w) / 2);
         cntY = Math.floor(window.innerHeight / h);
+        smallest = PGB.plg.Edt.getSmallestTbr();
+        if (smallest !== null) {
+            smallestW = smallest.elem.outerWidth();
+            smallestH = smallest.elem.outerHeight();
+        }
+        else {
+            smallestW = w;
+            smallestH = h;
+        }
         // left/right
         for (p = 0; p <= 1; p++) {
             // x-axis
             for (j = 0; j < cntX; j++) {
                 // Magic secret sauce
                 if (p === 0) {
-                    xVal = (w * j);
+                    xVal = (smallestW * j);
                 }
                 else {
-                    xVal = window.innerWidth - (w * (j + 1));
+                    xVal = window.innerWidth - (smallestW * (j + 1));
                 }
                 // y-axis
                 for (k = 0; k < cntY; k++) {
-                    yVal = (h * k);
+                    yVal = (smallestH * k);
                     ret = this._findPosFromXY(w, h, xVal, yVal);
                     if (ret !== false) {
                         return ret;
