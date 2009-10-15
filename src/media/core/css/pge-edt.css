@@ -27,6 +27,19 @@
     width : 10em;
 }
 
+#pge-edt .edt-tbr-btn-close
+{
+    position : absolute;
+    right : 1em;
+    top : 1em;
+    width : 16px;
+    height : 16px;
+    border : 1px solid #F00;
+    cursor : pointer;
+    font-size : 16px;
+    line-height : 16px;
+}
+
 #pge-edt .edt-tbr-widget
 {
     width : 20em;
@@ -41,6 +54,7 @@
     padding : .3em 1.5em .3em 10px;
     font-size : 1.5em;
     cursor : move;
+    position : relative;
 }
 
 #pge-edt .edt-tbr-prim li

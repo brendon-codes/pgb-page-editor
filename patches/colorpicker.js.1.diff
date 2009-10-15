@@ -1,0 +1,11 @@
+--- colorpicker.js	2009-10-15 12:58:12.000000000 -0700
++++ colorpicker.js	2009-10-15 12:59:47.000000000 -0700
+@@ -164,6 +164,8 @@
+ 					pos: $(this).offset()
+ 				};
+ 				current.preview = current.cal.data('colorpicker').livePreview;
++				ev.data = current;
++				moveSelector(ev);
+ 				$(document).bind('mouseup', current, upSelector);
+ 				$(document).bind('mousemove', current, moveSelector);
+ 			},

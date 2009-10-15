@@ -12,7 +12,9 @@ PGB.plg.Edt.TbrWidget = PGB.plg.Edt.Tbr.extend({
     constructor : function(name, bdy, width) {
         var _this;
         _this = this;
-        this.base(name);
+        this.base(name, {
+            closeBtn : true
+        });
         this.tbrBodyCont.html(bdy);
         this.elem.css({
             width : PGB.a('{w}px', {w:width})

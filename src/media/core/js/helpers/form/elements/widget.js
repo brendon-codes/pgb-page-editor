@@ -26,17 +26,15 @@ PGB.plg.Form.type.WidgetElement = PGB.plg.Form.type.Element.extend({
         _this = this;
         btn.click(function() {
             var wdgt;
-            if (!_this.active) {
+            if (_this._tbr === null || !_this._tbr.isActive()) {
                 wdgt = actionCB.apply(_this);
                 _this._tbr = new PGB.plg.Edt.TbrWidget(name, wdgt, width);
                 if ($.isFunction(cleanup)) {
                     _this._tbr.registerCleanup(cleanup, _this);
                 }
-                _this.active = true;
             }
             else {
                 _this._tbr.destroy();
-                _this.active = false;
             }
             return true;
         });

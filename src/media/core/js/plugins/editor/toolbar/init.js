@@ -10,6 +10,8 @@ PGB.include('form.elements', 'colorpicker', 2);
 
 
 PGB.plg.Edt.Tbr = Base.extend({
+    
+    _active : false,
 
     /**
      * Setup the toolbar
@@ -17,11 +19,28 @@ PGB.plg.Edt.Tbr = Base.extend({
      * @param {Object[HTMLElement]} context
      * @constructor
      */
-    constructor : function(headText) {
-        var _this, code;
+    constructor : function(headText, options) {
+        var _this, code, closer;
+        options = $.extend({
+            closeBtn : false
+        }, options);
         _this = this;
         this.tbrHead = $('<h1>');
         this.tbrHead.text(headText);
+        if (options.closeBtn) {
+            closer = $('<div>').text('X');
+            closer.addClass('edt-tbr-btn-close');
+            closer.click(function() {
+                if ($.isFunction(_this.constructor.destroy)) {
+                    _this.constructor.destroy();
+                }
+                else {
+                    _this.destroy();
+                }
+                return true;
+            });
+            this.tbrHead.append(closer);
+        }
         this.tbrBodyCont = $('<div>');
         this.tbrBodyCont.addClass('edt-tbr-bdycnt');
         this.elem = $('<div>');
@@ -48,6 +67,7 @@ PGB.plg.Edt.Tbr = Base.extend({
            return false; 
         });
         PGB.plg.Edt.regTbr(this);
+        this._active = true;
         return;
     },
 
@@ -253,8 +273,16 @@ PGB.plg.Edt.Tbr = Base.extend({
     destroy : function() {
         PGB.plg.Edt.unregisterTbr(this);
         this.elem.remove();
-        delete this;
+        this._active = false;
         return true;
+    },
+
+    /**
+     * Determines if toolbar is active
+     * 
+     */
+    isActive : function() {
+        return this._active;
     }
     
 });
