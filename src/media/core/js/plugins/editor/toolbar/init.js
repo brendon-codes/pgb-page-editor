@@ -22,7 +22,8 @@ PGB.plg.Edt.Tbr = Base.extend({
     constructor : function(headText, options) {
         var _this, code, closer;
         options = $.extend({
-            closeBtn : false
+            closeBtn : false,
+            width : null
         }, options);
         _this = this;
         this.tbrHead = $('<h1>');
@@ -47,6 +48,11 @@ PGB.plg.Edt.Tbr = Base.extend({
         this.elem.addClass('edt-tbr');
         this.elem.append(this.tbrHead);
         this.elem.append(this.tbrBodyCont);
+        if (options.width !== null) {
+            this.elem.css({
+                width : PGB.a('{w}px', {w:options.width})
+            });
+        }
         PGB.plg.Edt.context.append(this.elem);
         code = headText.replace(/[^a-z0-9]+/ig, '').toLowerCase();
         this.elem.draggable({
@@ -81,9 +87,11 @@ PGB.plg.Edt.Tbr = Base.extend({
             // no new toolbars exist in this place
             if (this.findPosFromXY(coords.left, coords.top) !== false) {
                 this.setPosition(coords.left, coords.top);
+                //console.log('no');
                 resetTbrPos = false;
             }
             else {
+                //console.log('yes');
                 resetTbrPos = true;                
             }
         }
@@ -101,6 +109,7 @@ PGB.plg.Edt.Tbr = Base.extend({
             else {
                 p = this.elem.position();
             }
+            //console.log(code, p);
             PGB.plg.Edt.setTbrCoords(code, p.top, p.left);
         }
         return true;
@@ -164,6 +173,7 @@ PGB.plg.Edt.Tbr = Base.extend({
      */
     _findPosFromXY : function(w, h, xVal, yVal) {
         var found, i;
+        //console.log(arguments);
         // Search all toolbars
         found = false;
         for (i in PGB.plg.Edt.tbrs) {
@@ -176,12 +186,14 @@ PGB.plg.Edt.Tbr = Base.extend({
         }
         // No toolbars found in this region
         if (!found) {
+            //console.log('not found');
             return {
                 left : xVal,
                 top : yVal
             };
         }
         else {
+            //console.log('found a tbr');
             return false;
         }
     },
@@ -210,16 +222,12 @@ PGB.plg.Edt.Tbr = Base.extend({
      */
     findTbrPosition : function(tbr, w, h, x, y) {
         var tbrBump, c, group;
-        c = tbr.elem.data('pgb_coords');
         group = this.elem.data('bump').group;
-        if (c === undefined) {
-            c = {
-                w : tbr.elem.outerWidth(),
-                h : tbr.elem.outerHeight(),
-                o : tbr.elem.offset()                
-            };
-            tbr.elem.data('pgb_coords', c);
-        }
+        c = {
+            w : tbr.elem.outerWidth(),
+            h : tbr.elem.outerHeight(),
+            o : tbr.elem.offset()                
+        };
         tbrBump = tbr.elem.data('bump');
         if (tbrBump === undefined || group !== tbrBump.group) {
             return false;

@@ -13,12 +13,10 @@ PGB.plg.Edt.TbrWidget = PGB.plg.Edt.Tbr.extend({
         var _this;
         _this = this;
         this.base(name, {
-            closeBtn : true
+            closeBtn : true,
+            width : width
         });
         this.tbrBodyCont.html(bdy);
-        this.elem.css({
-            width : PGB.a('{w}px', {w:width})
-        });
         return;
     },
 
