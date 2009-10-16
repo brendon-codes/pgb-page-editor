@@ -31,8 +31,9 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
         });
         this.elem.draggable({
             snap : true,
-            containment : 'parent',
-            opacity : .9
+            containment : 'parent'
+            // Disabling this for performance reasons
+            //opacity : .9
         });
         this._origParent.append(this.elem);
         this.base();

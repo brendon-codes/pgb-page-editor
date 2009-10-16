@@ -6,6 +6,10 @@
  * @param {Object[Event]} e
  */
 PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
+    /**
+     * Properties
+     */
+    _selector : null,
 
     /**
      * Selects a Box element instance
@@ -15,7 +19,9 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
      * @return {Bool}
      */
     sel : function() {
-        this.elem.addClass('edt-box-active');
+        this._selector = $('<div>').addClass('edt-block-selector');
+        this.elem.append(this._selector);
+        this.swell();
         return true;
     },
 
@@ -27,8 +33,52 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
      * @return {Bool}
      */
     desel : function() {
-        this.elem.removeClass('edt-box-active');
+        if (this._selector !== null) {
+            this.stopSwell();
+            this._selector.remove();
+        }
         return true;
+    },
+
+    /**
+     * Swell for element
+     * 
+     * @param {Object} elm
+     */
+    swell : function() {
+        var _this;
+        _this = this;
+        this._selector.animate({
+            opacity : .1
+        }, 1500, function() {
+            _this._swell();
+            return true;
+        });
+        return true;
+    },
+
+    /**
+     * Reverse swell for element
+     */
+    _swell : function() {
+        var _this;
+        _this = this;
+        this._selector.animate({
+            opacity : 1
+        }, 1500, function() {
+            _this.swell();
+            return true;
+        });
+        return true;        
+    },
+
+    /**
+     * Stops element swell
+     * 
+     * @param {Object} elm
+     */
+    stopSwell : function() {
+        this._selector.stop(true, false);
     },
 
     /**
