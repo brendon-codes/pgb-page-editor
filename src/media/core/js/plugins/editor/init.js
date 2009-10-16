@@ -3,6 +3,8 @@ PGB.include('editor', 'toolbar', 1);
 PGB.include('editor', 'toolbar.primary', 2);
 PGB.include('editor', 'toolbar.form', 2);
 PGB.include('editor', 'toolbar.widget', 2);
+PGB.include('editor', 'elements', 1);
+PGB.include('editor', 'elements.body', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);
 
@@ -42,9 +44,10 @@ PGB.plg.Edt = Base.extend(null, {
      * @return {Bool}
      */
     go : function(context) {
-        var primTbr, detTbr;
+        var bodyElm, primTbr, detTbr;
         this.context = context;
-        this.fixBody();
+        // Need to set a body element
+        bodyElm = new PGB.plg.Edt.elmP.Body();
         this.setMouse();
         primTbr = new this.TbrPrim();
         return true;
@@ -244,17 +247,6 @@ PGB.plg.Edt = Base.extend(null, {
             throw this.ERR.TBR_NO_REGID;
             return false;
         }
-    },
-    
-    /**
-     * Fixes body height
-     * 
-     * @return {Bool}
-     */
-    fixBody : function() {
-        document.body.style.height =
-            PGB.a('{h}px', {h:window.innerHeight});
-        return true;
     },
     
     /**

@@ -5,7 +5,7 @@
  * @param {Object[PGB.plg.Edt.cmp.Box]} boxCmp
  * @param {Object[Event]} e
  */
-PGB.plg.Edt.elmP.Box = Base.extend({
+PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
 
     constructor : function(boxCmp, e) {
         var x, y, w, h, r, g, b, o;
@@ -130,7 +130,9 @@ PGB.plg.Edt.elmP.Box = Base.extend({
      * @method _remove
      * @return {Bool}
      */
-    destroy : function() {
+    destroy : function(child) {
+        var _this;
+        _this = this;
         PGB.plg.Edt.deselectElms();
         PGB.plg.Edt.remDetails();
         // Recusively remove child elements
@@ -141,15 +143,26 @@ PGB.plg.Edt.elmP.Box = Base.extend({
                 d = $(c).data('pgb');
                 if (d !== undefined && d.elmPInstance !== undefined) {
                     if ($.isFunction(d.elmPInstance.destroy)) {
-                        d.elmPInstance.destroy();
+                        d.elmPInstance.destroy(true);
                     }
                 }
                 arguments.callee(c);
             }
         })(this.elem[0]);
         PGB.plg.Edt.unregisterElm(this);
-        this.elem.remove();
-        delete this;
+        // Sub element
+        if (child === true) {
+            this.elem.remove();
+            delete this;
+        }
+        // Top element
+        else {
+            this.elem.hide('fast', function() {
+                $(this).remove();
+                delete _this;
+                return true;
+            });
+        }
         return true;
     }
 
