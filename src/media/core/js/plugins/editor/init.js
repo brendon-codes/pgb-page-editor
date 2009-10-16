@@ -4,6 +4,7 @@ PGB.include('editor', 'toolbar.primary', 2);
 PGB.include('editor', 'toolbar.form', 2);
 PGB.include('editor', 'toolbar.widget', 2);
 PGB.include('editor', 'elements', 1);
+PGB.include('editor', 'elements.block', 2);
 PGB.include('editor', 'elements.body', 2);
 PGB.include('editor', 'components.selection', 1);
 PGB.include('editor', 'components.box', 1);

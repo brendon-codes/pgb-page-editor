@@ -5,7 +5,7 @@
  * @param {Object[PGB.plg.Edt.cmp.Box]} boxCmp
  * @param {Object[Event]} e
  */
-PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
+PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
 
     constructor : function(boxCmp, e) {
         var x, y, w, h, r, g, b, o;
@@ -35,7 +35,7 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
             opacity : .9
         });
         this._origParent.append(this.elem);
-        PGB.plg.Edt.registerElm(this);
+        this.base();
         return;
     },
 
@@ -50,7 +50,7 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
         this.elem.resizable({
             containment : 'parent'
         });
-        this.elem.addClass('edt-box-active');
+        this.base();
         return true;
     },
 
@@ -63,28 +63,8 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
      */
     desel : function() {
         this.elem.resizable('destroy');
-        this.elem.removeClass('edt-box-active');
+        this.base();
         return true;
-    },
-
-    /**
-     * Sets up box element instance details
-     * 
-     * @class PGB.plg.Edt.elmP.Box
-     * @method details
-     * @return {Object}
-     */
-    availProps : function() {
-        var out;
-        out = {};
-        out.bgcolor = {
-            type: 'colorpicker',
-            value: 'BG Color',
-            defaultValue : this.elem.css('background-color'),
-            action: this.bgColor,
-            instance: this
-        };
-        return out;
     },
 
     /**
@@ -101,28 +81,9 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
             action: this.destroy,
             instance: this
         };
-        /*
-        out.sendBackward = {
-            type : 'button',
-            value : 'Send Backward',
-            action : this.sendBackward,
-            instance : this
-        };
-        */
         return out;        
     },
-
-    /**
-     * Action to change bgColor
-     * 
-     * 
-     */
-    bgColor : function(val) {
-        this.elem.css({
-            backgroundColor : val
-        });
-    },
-    
+   
     /**
      * Remove action for a box
      * 
@@ -149,7 +110,7 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
                 arguments.callee(c);
             }
         })(this.elem[0]);
-        PGB.plg.Edt.unregisterElm(this);
+        this.base();
         // Sub element
         if (child === true) {
             this.elem.remove();
@@ -157,7 +118,7 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.Element.extend({
         }
         // Top element
         else {
-            this.elem.hide('fast', function() {
+            this.elem.fadeOut('slow', function() {
                 $(this).remove();
                 delete _this;
                 return true;
