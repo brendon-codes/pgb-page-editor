@@ -45,6 +45,7 @@ PGB.utl = Base.extend(null, {
             t = $(e.srcElement);
         }
         else if (e.target !== undefined) {
+            //console.log(1);
             t = $(e.target);
         }
         return t;

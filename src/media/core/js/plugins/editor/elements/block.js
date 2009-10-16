@@ -21,6 +21,8 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
     sel : function() {
         this._selector = $('<div>').addClass('edt-block-selector');
         this.elem.append(this._selector);
+        //console.log(this.elem.css('z-index'), this._selector.css('z-index'));
+        //this._selector.css('z-index',  + 1);
         this.swell();
         return true;
     },
