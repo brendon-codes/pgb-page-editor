@@ -160,7 +160,7 @@ PGB.plg.Edt = Base.extend(null, {
      * 
      * @param {Object} elm
      */
-    stackBack : function(elm) {
+    stackMove : function(elm, dir) {
         var par, siblingPos, i, j, _j, pos, thisSibPos, thisRegID;
         pos = this.stackGetPosition(elm);
         siblingPos = null;
@@ -169,24 +169,26 @@ PGB.plg.Edt = Base.extend(null, {
             if (this.elms[i].elem[0].parentNode === par) {
                 thisRegID = this.elms[i].regID;
                 thisSibPos = this.stackGetPosition(thisRegID);
-                if (thisSibPos === false || thisSibPos >= pos) {
+                if (thisSibPos === false ||
+                        (dir === 'down' && thisSibPos >= pos) ||
+                        (dir === 'up' && thisSibPos <= pos)) {
                     continue;
                 }
-                if (siblingPos === null || thisSibPos > siblingPos) {
+                if (siblingPos === null ||
+                        (dir === 'down' && thisSibPos > siblingPos) ||
+                        (dir === 'up' && thisSibPos < siblingPos)) {
                     siblingPos = thisSibPos;
                 }
                 // Quit if found right below
-                if (siblingPos === (pos - 1)) {
+                if ((dir === 'down' && siblingPos === (pos - 1)) ||
+                        (dir === 'up' && siblingPos === (pos + 1))) {
                     break;
                 }
             }
         }
         if (siblingPos !== null) {
-            //console.log(siblingPos, elm.regID, this._elmStack);
             this.stackRemIndex(pos);
             this.stackInsert(siblingPos, elm.regID);
-            //console.log(this._elmStack);
-            this.stackProcess();
             return this._elmStack.length;
         }
         else {

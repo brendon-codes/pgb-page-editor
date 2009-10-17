@@ -95,6 +95,12 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
             action: this.sendBack,
             instance: this
         };
+        out.bringForward = {
+            type: 'button',
+            value: 'Bring Forward',
+            action: this.bringForward,
+            instance: this
+        };
         return out;        
     },
 
@@ -102,8 +108,19 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
      * Sends an item back
      */
     sendBack : function() {
-        PGB.plg.Edt.stackBack(this);
+        PGB.plg.Edt.stackMove(this, 'down');
+        PGB.plg.Edt.stackProcess();
         return true;
+    },
+
+    /**
+     * Bring an item forward
+     * 
+     */
+    bringForward : function() {
+        PGB.plg.Edt.stackMove(this, 'up');
+        PGB.plg.Edt.stackProcess();
+        return true;        
     },
    
     /**
