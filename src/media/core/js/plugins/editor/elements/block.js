@@ -27,7 +27,8 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
         this.elem.append(this._selector);
         PGB.plg.Edt.stackProcessHelper(this, this._selector,
             this.STACK_OFFSET.SELECTOR);
-        this.swell();
+        // Disabling for performance reasons
+        //this.swell();
         return true;
     },
 
@@ -40,7 +41,8 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
      */
     desel : function() {
         if (this._selector !== null) {
-            this.stopSwell();
+            // Disabling for performance
+            //this.stopSwell();
             this._selector.remove();
         }
         return true;
