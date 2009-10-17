@@ -18,6 +18,7 @@ PGB.plg.Edt = Base.extend(null, {
      */
     elms : {},
     tbrs : {},
+    _elmStack : [],
     _tbrCoords : {},
     cmp : {},
     elmP : {},
@@ -79,6 +80,118 @@ PGB.plg.Edt = Base.extend(null, {
             return true;
         });
         return true;    
+    },
+    
+    /**
+     * Adds a stack item
+     * 
+     */
+    stackAdd : function(elm) {
+        var regID;
+        regID = null;
+        if (!isNaN(elm)) {
+            regID = window.parseInt(elm);
+        }
+        else if (elm instanceof PGB.plg.Edt.elmP.Element) {
+            regID = elm.regID;
+        }
+        if (regID !== null) {
+            this._elmStack.unshift(elm.regID);
+            this.stackProcess();
+            return this._elmStack.length;
+        }
+        else {
+            return false;
+        }
+    },
+
+    /**
+     * Removes an item from the stack
+     * 
+     * @param {Object} tbr
+     */
+    stackRem : function(elm, process) {
+        var regID, i;
+        regID = null;
+        if (!isNaN(elm)) {
+            regID = window.parseInt(elm);
+        }
+        else if (elm instanceof PGB.plg.Edt.elmP.Element) {
+            regID = elm.regID;
+        }
+        if (regID !== null) {
+            for (i = this._elmStack.length - 1; i >= 0; i--) {
+                if (this._elmStack[i] === regID) {
+                    delete this._elmStack[i];
+                    this.stackTrim();
+                    if (process === true) {
+                        this.stackProcess();
+                    }
+                    return this._elmStack.length;
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Trim the stack after it has been altered
+     * 
+     */
+    stackTrim : function() {
+        var o, i, _i;
+        o = [];
+        for (i = 0, _i = this._elmStack.length; i < _i; i++) {
+            if (this._elmStack[i] !== undefined) {
+                o.push(this._elmStack[i]);
+            }
+        }
+        this._elmStack = o;
+        return o.length;
+    },
+
+    /**
+     * Processes stack
+     * 
+     * @param {Object} tbr
+     */
+    stackProcess : function() {
+        var start, inc, i, j, regID, z;
+        start = 100;
+        inc = 10;
+        for (i = this._elmStack.length - 1, j = 0; i >= 0; i--, j++) {
+            regID = this._elmStack[i];
+            // Cleanup just in case
+            if (this.elms[regID] === undefined) {
+                delete this._elmStack[i];
+                continue;
+            }
+            // Set zIndex
+            z = start + (inc * j);
+            this.elms[regID].elem.css('z-index', z);
+        }
+        return this._elmStack.length;
+    },
+
+    /**
+     * Processes a stack helper element
+     * 
+     */
+    stackProcessHelper : function(elm, helper, offset) {
+        var z, regID, i;
+        if (!isNaN(elm)) {
+            regID = window.parseInt(elm);
+            elm = this.elms[regID];
+        }
+        z = elm.elem.css('z-index');
+        if (!isNaN(z)) {
+            z = window.parseInt(z) + offset;
+            helper.css('z-index', z);
+            return true;
+        }
+        else {
+            return false;
+        }
     },
 
     /**
@@ -304,7 +417,7 @@ PGB.plg.Edt = Base.extend(null, {
      * @param {Object[PGB.plg.Edt.elmP.Box]} elmPInstance
      * @return {Int}
      */
-    unregisterElm : function(elmPInstance) {
+    unregisterElm : function(elmPInstance, reStack) {
         if (elmPInstance.regID !== undefined) {
             this.elms[elmPInstance.regID] = undefined;
             delete this.elms[elmPInstance.regID];

@@ -8,6 +8,7 @@ PGB.plg.Edt.elmP.Element = Base.extend({
      */
     constructor : function() {
         PGB.plg.Edt.registerElm(this);
+        PGB.plg.Edt.stackAdd(this);
         return;
     },
 
@@ -19,6 +20,7 @@ PGB.plg.Edt.elmP.Element = Base.extend({
      * @return {Bool}
      */
     destroy : function(child) {
+        PGB.plg.Edt.stackRem(this, !child);
         PGB.plg.Edt.unregisterElm(this);
         return true;
     }

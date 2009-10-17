@@ -48,9 +48,16 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
      * @return {Bool}
      */
     sel : function() {
+        var r, h, offset;
+        offset = this.STACK_OFFSET.RESIZE;
         this.elem.resizable({
             containment : 'parent'
         });
+        r = this.elem.data('resizable');
+        for (h in r.handles) {
+            PGB.plg.Edt.stackProcessHelper(this, r.handles[h], offset);
+            offset++;
+        }
         this.base();
         return true;
     },

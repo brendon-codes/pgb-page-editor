@@ -10,6 +10,10 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
      * Properties
      */
     _selector : null,
+    STACK_OFFSET : {
+        SELECTOR : 1,
+        RESIZE : 2
+    },
 
     /**
      * Selects a Box element instance
@@ -21,8 +25,8 @@ PGB.plg.Edt.elmP.BlockElement = PGB.plg.Edt.elmP.Element.extend({
     sel : function() {
         this._selector = $('<div>').addClass('edt-block-selector');
         this.elem.append(this._selector);
-        //console.log(this.elem.css('z-index'), this._selector.css('z-index'));
-        //this._selector.css('z-index',  + 1);
+        PGB.plg.Edt.stackProcessHelper(this, this._selector,
+            this.STACK_OFFSET.SELECTOR);
         this.swell();
         return true;
     },
