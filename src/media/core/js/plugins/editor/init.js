@@ -96,8 +96,7 @@ PGB.plg.Edt = Base.extend(null, {
             regID = elm.regID;
         }
         if (regID !== null) {
-            this._elmStack.unshift(elm.regID);
-            this.stackProcess();
+            this._elmStack.push(elm.regID);
             return this._elmStack.length;
         }
         else {
@@ -110,8 +109,35 @@ PGB.plg.Edt = Base.extend(null, {
      * 
      * @param {Object} tbr
      */
-    stackRem : function(elm, process) {
-        var regID, i;
+    stackRem : function(elm) {
+        var pos;
+        pos = this.stackGetPosition(elm);
+        if (pos !== false) {
+            delete this._elmStack[pos];
+            this.stackTrim();
+            return this._elmStack.length;
+        }
+        return false;
+    },
+
+    /**
+     * Removes an item from the stack
+     * 
+     * @param {Object} tbr
+     */
+    stackRemIndex : function(pos) {
+        delete this._elmStack[pos];
+        this.stackTrim();
+        return this._elmStack.length;
+    },
+
+    /**
+     * Gets elements position in stack
+     * 
+     * 
+     */
+    stackGetPosition : function(elm) {
+        var regID, i, _i;
         regID = null;
         if (!isNaN(elm)) {
             regID = window.parseInt(elm);
@@ -120,18 +146,61 @@ PGB.plg.Edt = Base.extend(null, {
             regID = elm.regID;
         }
         if (regID !== null) {
-            for (i = this._elmStack.length - 1; i >= 0; i--) {
+            for (i = 0, _i = this._elmStack.length; i < _i; i++) {
                 if (this._elmStack[i] === regID) {
-                    delete this._elmStack[i];
-                    this.stackTrim();
-                    if (process === true) {
-                        this.stackProcess();
-                    }
-                    return this._elmStack.length;
+                    return i;
                 }
             }
         }
         return false;
+    },
+
+    /**
+     * Sends an element back
+     * 
+     * @param {Object} elm
+     */
+    stackBack : function(elm) {
+        var par, siblingPos, i, j, _j, pos, thisSibPos, thisRegID;
+        pos = this.stackGetPosition(elm);
+        siblingPos = null;
+        par = elm.elem[0].parentNode;
+        for (i in this.elms) {
+            if (this.elms[i].elem[0].parentNode === par) {
+                thisRegID = this.elms[i].regID;
+                thisSibPos = this.stackGetPosition(thisRegID);
+                if (thisSibPos === false || thisSibPos >= pos) {
+                    continue;
+                }
+                if (siblingPos === null || thisSibPos > siblingPos) {
+                    siblingPos = thisSibPos;
+                }
+                // Quit if found right below
+                if (siblingPos === (pos - 1)) {
+                    break;
+                }
+            }
+        }
+        if (siblingPos !== null) {
+            //console.log(siblingPos, elm.regID, this._elmStack);
+            this.stackRemIndex(pos);
+            this.stackInsert(siblingPos, elm.regID);
+            //console.log(this._elmStack);
+            this.stackProcess();
+            return this._elmStack.length;
+        }
+        else {
+            return false;
+        }
+    },
+
+    /**
+     * Inserts item into position in stack
+     * 
+     */
+    stackInsert : function(pos, regID) {
+        this._elmStack.splice(pos, 0, regID);
+        return this._elmStack.length;
     },
 
     /**
@@ -156,18 +225,13 @@ PGB.plg.Edt = Base.extend(null, {
      * @param {Object} tbr
      */
     stackProcess : function() {
-        var start, inc, i, j, regID, z;
+        var start, inc, i, _i, regID, z;
         start = 100;
         inc = 10;
-        for (i = this._elmStack.length - 1, j = 0; i >= 0; i--, j++) {
+        for (i = 0, _i = this._elmStack.length; i < _i; i++) {
             regID = this._elmStack[i];
-            // Cleanup just in case
-            if (this.elms[regID] === undefined) {
-                delete this._elmStack[i];
-                continue;
-            }
             // Set zIndex
-            z = start + (inc * j);
+            z = start + (inc * i);
             this.elms[regID].elem.css('z-index', z);
         }
         return this._elmStack.length;
@@ -443,6 +507,8 @@ PGB.plg.Edt = Base.extend(null, {
         }
         else {
             i = PGB.utl.rand();
+            // Enable this next line only for debug
+            //elmPInstance.elem.text(i);
             //console.log(i);
             // Add reverse lookup
             elmPInstance.elem.data('pgb', {

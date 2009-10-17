@@ -89,7 +89,21 @@ PGB.plg.Edt.elmP.Box = PGB.plg.Edt.elmP.BlockElement.extend({
             action: this.destroy,
             instance: this
         };
+        out.sendBack = {
+            type: 'button',
+            value: 'Send Back',
+            action: this.sendBack,
+            instance: this
+        };
         return out;        
+    },
+
+    /**
+     * Sends an item back
+     */
+    sendBack : function() {
+        PGB.plg.Edt.stackBack(this);
+        return true;
     },
    
     /**
